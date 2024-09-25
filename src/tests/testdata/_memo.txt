@@ -1,1 +1,5 @@
-https://github.com/KhronosGroup/glTF-Sample-Models
+clone
+    https://github.com/KhronosGroup/glTF-Sample-Assets
+
+require
+    normaltest0.png

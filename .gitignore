@@ -35,5 +35,9 @@
 local_data
 build
 
-# auto generate
+# auto generate etc
 src/tests/testconfig.h
+src/tests/output
+src/tests/testdata/*
+!src/tests/testdata/_memo.txt
+!src/tests/testdata/config

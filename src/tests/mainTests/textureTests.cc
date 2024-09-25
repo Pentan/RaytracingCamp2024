@@ -14,12 +14,13 @@
 using namespace Spectrenotes;
 
 namespace {
-    void SaveImage(std::string filename, const ImageTexture* tex) {
+    void SaveImage(std::string filename, const ImageTexture* tex, const double gamma=2.2) {
         std::string outdir = "textureTest";
         CheckTestOutputDir(outdir);
 
         int w = tex->width;
         int h = tex->height;
+        double ungamma = 1.0 / gamma;
 
         std::vector<unsigned char> buf(w * h * 4);
         unsigned char* data = buf.data();
@@ -29,7 +30,7 @@ namespace {
                 RTFloat tx = ix / static_cast<RTFloat>(w);
                 int i = (ix + iy * w) * 4;
                 auto s = tex->sample(tx, ty, false);
-                s.powRGB(1.0/2.2);
+                s.powRGB(ungamma);
                 data[i + 0] = static_cast<unsigned char>(std::max(0.0, std::min(255.0, s.rgb.r * 256.0)));
                 data[i + 1] = static_cast<unsigned char>(std::max(0.0, std::min(255.0, s.rgb.g * 256.0)));
                 data[i + 2] = static_cast<unsigned char>(std::max(0.0, std::min(255.0, s.rgb.b * 256.0)));
@@ -122,7 +123,8 @@ TEST_CASE("ImageTexture load test [Texture]") {
     
     int x, y, c;
     auto* data = stbi_load(path.c_str(), &x, &y, &c, 4);
-    
+    REQUIRE(data != nullptr);
+
     ImageTexture tex(x, y);
     tex.initWith8BPPImage(data, c, 1.0);
     
