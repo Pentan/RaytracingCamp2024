@@ -1,23 +1,23 @@
 //
 //  intersection.h
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2022/08/14.
 //
 
-#ifndef PINKYPI_INTERSECTION_H
-#define PINKYPI_INTERSECTION_H
+#ifndef SPECTRENOTES_INTERSECTION_H
+#define SPECTRENOTES_INTERSECTION_H
 
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     //
     struct MeshIntersection {
         int meshId;
         int clusterId;
         int triangleId;
-        PPFloat vcb;
-        PPFloat vcc;
+        RTFloat vcb;
+        RTFloat vcc;
     };
     
     /////
@@ -42,4 +42,4 @@ namespace PinkyPi {
         int materialId;
     };
 }
-#endif /* PINKYPI_INTERSECTION_H */
+#endif /* SPECTRENOTES_INTERSECTION_H */

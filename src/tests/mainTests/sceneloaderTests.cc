@@ -4,19 +4,18 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/assetlibrary.h>
-#include <pinkycore/scene.h>
-#include <pinkycore/bvh.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/assetlibrary.h>
+#include <spectrenotes/scene.h>
+#include <spectrenotes/bvh.h>
+#include <spectrenotes/sceneloader.h>
 
-#include <pinkypi/sceneloader.h>
-
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     std::string KhronosGlTFSampleModelPath(std::string name) {
         std::stringstream ss;
-        ss <<  PINKYPI_TEST_DATA_DIR;
+        ss <<  SPCTRNTS_TEST_DATA_DIR;
         ss << "/glTF-Sample-Models/2.0/";
         ss << name << "/glTF/";
         ss << name << ".gltf";

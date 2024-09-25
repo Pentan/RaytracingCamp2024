@@ -1,6 +1,6 @@
 //
 //  material.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2019/08/16.
 //
@@ -8,9 +8,9 @@
 #include <cmath>
 #include "material.h"
 #include "texture.h"
-#include "pptypes.h"
+#include "types.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     enum BXDFId {
@@ -25,9 +25,9 @@ namespace {
 /////
 
 void Sampler::basisFromNormal(const Vector3& n, Vector3* ou, Vector3* ov) {
-    PPFloat s = (n.z < 0.0) ? -1.0 : 1.0;
-    PPFloat a = -1.0 / (s + n.z);
-    PPFloat b = n.x * n.y * a;
+    RTFloat s = (n.z < 0.0) ? -1.0 : 1.0;
+    RTFloat a = -1.0 / (s + n.z);
+    RTFloat b = n.x * n.y * a;
     ou->set(1.0 + s * n.x * n.x * a, s * b, -s * n.x);
     ov->set(b, s + n.y * n.y * a, -n.y);
 }
@@ -37,11 +37,11 @@ Sampler::SampleResult Sampler::sampleUniformHemisphere(const Vector3& n, Random&
     Vector3 u, v;
     basisFromNormal(n, &u, &v);
     
-    PPFloat z = rng.nextDoubleCC();
-    PPFloat r = std::sqrt(std::max(0.0, 1.0 - z * z));
-    PPFloat t = 2.0 * kPI * rng.nextDoubleCO();
-    PPFloat x = r * std::cos(t);
-    PPFloat y = r * std::sin(t);
+    RTFloat z = rng.nextDoubleCC();
+    RTFloat r = std::sqrt(std::max(0.0, 1.0 - z * z));
+    RTFloat t = 2.0 * kPI * rng.nextDoubleCO();
+    RTFloat x = r * std::cos(t);
+    RTFloat y = r * std::sin(t);
     
     res.pdf =  1.0 / kPI;
     res.v = u * x + v * y + n * z;
@@ -54,15 +54,15 @@ Sampler::SampleResult Sampler::sampleCosineWeightedHemisphere(const Vector3& n, 
     Vector3 u, v;
     basisFromNormal(n, &u, &v);
     
-    PPFloat a = rng.nextDoubleCO() * 2.0 - 1.0;
-    PPFloat b = rng.nextDoubleCO() * 2.0 - 1.0;
-    PPFloat x, y, z;
+    RTFloat a = rng.nextDoubleCO() * 2.0 - 1.0;
+    RTFloat b = rng.nextDoubleCO() * 2.0 - 1.0;
+    RTFloat x, y, z;
     if(a * a + b * b <= 0.0) {
         x = 0.0;
         y = 0.0;
         z = 1.0;
     } else {
-        PPFloat t, r;
+        RTFloat t, r;
         if(std::abs(a) > std::abs(b)) {
             r = a;
             t = kPI * 0.25 * b / a;
@@ -113,10 +113,10 @@ Color Material::evaluateThroughput(const Ray& iray, Ray* oray, const SurfaceInfo
         {
             log->selectedBxdfId = BXDFId::kLambert;
             log->bxdfType = BXDFType::kDiffuse;
-            PPFloat s = (Vector3::dot(iray.direction, surfinfo.shadingNormal) > 0.0) ? -1.0 : 1.0;
+            RTFloat s = (Vector3::dot(iray.direction, surfinfo.shadingNormal) > 0.0) ? -1.0 : 1.0;
             auto smpl = Sampler::sampleCosineWeightedHemisphere(surfinfo.shadingNormal * s, rng);
             Ray nray(surfinfo.position, smpl.v);
-            PPFloat fx = evaluateBXDF(iray, nray, BXDFId::kLambert, surfinfo, log);
+            RTFloat fx = evaluateBXDF(iray, nray, BXDFId::kLambert, surfinfo, log);
             Color albedo = evaluateAlbedoColor(surfinfo.uv0);
             *oray = nray;
             log->samplePdf = smpl.pdf;
@@ -138,8 +138,8 @@ Color Material::evaluateThroughput(const Ray& iray, Ray* oray, const SurfaceInfo
     return ret;
 }
 
-PPFloat Material::evaluateBXDF(const Ray& iray, const Ray& oray, int bxdfId, const SurfaceInfo& surfinfo, EvalLog* log) const {
-    PPFloat ret = 0.0;
+RTFloat Material::evaluateBXDF(const Ray& iray, const Ray& oray, int bxdfId, const SurfaceInfo& surfinfo, EvalLog* log) const {
+    RTFloat ret = 0.0;
     Vector3 inv = iray.direction * -1.0;
     Vector3 outv = oray.direction;
 

@@ -5,16 +5,16 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/random.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/random.h>
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 TEST_CASE("Random test [Random]") {
     bool writelog = true;
     
     std::stringstream ss;
-    ss << PINKYPI_TEST_OUTPUT_DIR << "/randomout.txt";
+    ss << SPCTRNTS_TEST_OUTPUT_DIR << "/randomout.txt";
     std::string outpath = ss.str();
     
     std::ofstream fs(outpath, std::ios::binary);

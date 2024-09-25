@@ -1,7 +1,7 @@
 
 #include "animation.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 
 

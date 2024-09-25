@@ -1,6 +1,6 @@
 #include "bvh.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 /////
 void BVH::TreeNode::reset(const AABB* bnd) {
@@ -105,25 +105,25 @@ BVH::TreeNode* BVH::buildTree(TreeNode** childnodes, int numchild, int depth)
     }
 }
 
-PPFloat BVH::intersect(const Ray& ray, PPFloat tnear, PPFloat tfar, HitCallback hitfunc) const {
+RTFloat BVH::intersect(const Ray& ray, RTFloat tnear, RTFloat tfar, HitCallback hitfunc) const {
     if (!rootNode->bounds.isIntersect(ray, tnear, tfar)) {
         return -1.0;
     }
     return traverseIntersect(rootNode, ray, tnear, tfar, hitfunc);
 }
 
-PPFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tnear, PPFloat tfar, HitCallback hitfunc) const {
+RTFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, RTFloat tnear, RTFloat tfar, HitCallback hitfunc) const {
     if (node->source != nullptr) {
         return hitfunc(ray, tnear, tfar, node->source);
     }
     else {
-//        PPFloat t;
-        PPFloat rett = -1.0;
-        PPFloat tl = node->leftNode->bounds.mightIntersectContent(ray, tfar);
-        PPFloat tr = node->rightNode->bounds.mightIntersectContent(ray, tfar);
+//        RTFloat t;
+        RTFloat rett = -1.0;
+        RTFloat tl = node->leftNode->bounds.mightIntersectContent(ray, tfar);
+        RTFloat tr = node->rightNode->bounds.mightIntersectContent(ray, tfar);
         
         if (tl >= 0.0) {
-            PPFloat t = traverseIntersect(node->leftNode, ray, tnear, tfar, hitfunc);
+            RTFloat t = traverseIntersect(node->leftNode, ray, tnear, tfar, hitfunc);
             if (t >= tnear && t <= tfar) {
                 tfar = t;
                 rett = t;
@@ -131,7 +131,7 @@ PPFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tne
         }
         
         if (tr >= 0.0) {
-            PPFloat t = traverseIntersect(node->rightNode, ray, tnear, tfar, hitfunc);
+            RTFloat t = traverseIntersect(node->rightNode, ray, tnear, tfar, hitfunc);
             if (t >= tnear && t <= tfar) {
                 rett = (rett < 0.0) ? t : std::min(rett, t);
             }
@@ -140,19 +140,19 @@ PPFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tne
     }
 }
 
-//PPFloat BVH::intersect(const Ray& ray, PPFloat tnear, PPFloat tfar, const TraverseInfo* tinfo) const {
+//RTFloat BVH::intersect(const Ray& ray, RTFloat tnear, RTFloat tfar, const TraverseInfo* tinfo) const {
 //    if (!rootNode->bounds.isIntersect(ray, tnear, tfar)) {
 //        return -1.0;
 //    }
 //    return traverseIntersect(rootNode, ray, tnear, tfar, tinfo);
 //}
 //
-//PPFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tnear, PPFloat tfar, const TraverseInfo* tinfo) const {
+//RTFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, RTFloat tnear, RTFloat tfar, const TraverseInfo* tinfo) const {
 //    if (node->source != nullptr) {
 //        return tinfo->leafHitCallback(ray, tnear, tfar, node->source, tinfo->userRef);
 //    } else {
-//        PPFloat t;
-//        PPFloat rett = -1.0;
+//        RTFloat t;
+//        RTFloat rett = -1.0;
 //        if(node->leftNode->bounds.isIntersect(ray, tnear, tfar)) {
 //            t = traverseIntersect(node->leftNode, ray, tnear, tfar, tinfo);
 //            if(t > tnear && t < tfar) {
@@ -175,23 +175,23 @@ PPFloat BVH::traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tne
 int BVH::compareTreeNodeX(const void* p0, const void* p1) {
     const TreeNode* n0 = reinterpret_cast<const TreeNode*>(p0);
     const TreeNode* n1 = reinterpret_cast<const TreeNode*>(p1);
-    PPFloat a = n0->bounds.centroid().x;
-    PPFloat b = n1->bounds.centroid().x;
+    RTFloat a = n0->bounds.centroid().x;
+    RTFloat b = n1->bounds.centroid().x;
     return (a == b) ? 0 : ((a < b) ? -1 : 1);
 }
 
 int BVH::compareTreeNodeY(const void* p0, const void* p1) {
     const TreeNode* n0 = reinterpret_cast<const TreeNode*>(p0);
     const TreeNode* n1 = reinterpret_cast<const TreeNode*>(p1);
-    PPFloat a = n0->bounds.centroid().y;
-    PPFloat b = n1->bounds.centroid().y;
+    RTFloat a = n0->bounds.centroid().y;
+    RTFloat b = n1->bounds.centroid().y;
     return (a == b) ? 0 : ((a < b) ? -1 : 1);
 }
 
 int BVH::compareTreeNodeZ(const void* p0, const void* p1) {
     const TreeNode* n0 = reinterpret_cast<const TreeNode*>(p0);
     const TreeNode* n1 = reinterpret_cast<const TreeNode*>(p1);
-    PPFloat a = n0->bounds.centroid().z;
-    PPFloat b = n1->bounds.centroid().z;
+    RTFloat a = n0->bounds.centroid().z;
+    RTFloat b = n1->bounds.centroid().z;
     return (a == b) ? 0 : ((a < b) ? -1 : 1);
 }

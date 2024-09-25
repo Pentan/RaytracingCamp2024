@@ -1,14 +1,14 @@
-#ifndef PINKYPI_SCENE_H
-#define PINKYPI_SCENE_H
+#ifndef SPECTRENOTES_SCENE_H
+#define SPECTRENOTES_SCENE_H
 
 #include <string>
 #include <vector>
 #include <memory>
-#include "pptypes.h"
+#include "types.h"
 #include "ray.h"
 #include "intersection.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class AssetLibrary;
     class Node;
@@ -52,9 +52,9 @@ namespace PinkyPi {
         // slice(4) [0]         [1]         [2]         [3]
         //           |-----------|-----------|-----------|
         //
-        void seekTime(PPTimeType opentime, PPTimeType closetime, int slice, int storeId);
-        PPFloat intersection(const Ray& ray, PPFloat hitnear, PPFloat hitfar, PPTimeType timerate, SceneIntersection *oisect) const;
-        void computeIntersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const SceneIntersection& isect, IntersectionDetail* odetail) const;
+        void seekTime(RTTimeType opentime, RTTimeType closetime, int slice, int storeId);
+        RTFloat intersection(const Ray& ray, RTFloat hitnear, RTFloat hitfar, RTTimeType timerate, SceneIntersection *oisect) const;
+        void computeIntersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const SceneIntersection& isect, IntersectionDetail* odetail) const;
         
     private:
         void preprocessTraverse(Node *node, Matrix4 gm, Config* config);

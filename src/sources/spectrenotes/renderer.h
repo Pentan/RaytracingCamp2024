@@ -1,5 +1,5 @@
-#ifndef PINKYPI_RENDERER_H
-#define PINKYPI_RENDERER_H
+#ifndef SPECTRENOTES_RENDERER_H
+#define SPECTRENOTES_RENDERER_H
 
 #include <vector>
 #include <memory>
@@ -11,7 +11,7 @@
 #include "random.h"
 #include "ray.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class Scene;
     class Config;
@@ -26,7 +26,7 @@ namespace PinkyPi {
         
         int minDepth;
         int maxDepth;
-        PPFloat minRussianRouletteCutOff;
+        RTFloat minRussianRouletteCutOff;
         
         int renderFrames;
         int startFrame;
@@ -45,7 +45,7 @@ namespace PinkyPi {
             Random random;
             FrameBuffer* framebuffer;
             PostProcessor* postprocessor;
-            PPTimeType exposureTimeRate;
+            RTTimeType exposureTimeRate;
         };
         
         std::vector<Context> renderContexts;
@@ -118,7 +118,7 @@ namespace PinkyPi {
         };
 
         struct TileInfo {
-            PPTimeType processTime;
+            RTTimeType processTime;
             int tileIndex;
         };
         
@@ -160,7 +160,7 @@ namespace PinkyPi {
         std::vector<TileInfo> tileInfos;
         
         void pushRenderCommands(FrameBuffer* fb, int frameID, int spp, int ss);
-        void renderOneFrame(FrameBuffer* fb, PostProcessor* pp, PPTimeType opentime, PPTimeType closetime, int frameId);
+        void renderOneFrame(FrameBuffer* fb, PostProcessor* pp, RTTimeType opentime, RTTimeType closetime, int frameId);
         void postProcessAndSave(FrameBuffer* fb, PostProcessor* pp, int frameid);
         void waitAllCommands();
         void waitAllAndLog();

@@ -1,26 +1,26 @@
-#ifndef PINKYPI_TEXTURE_H
-#define PINKYPI_TEXTURE_H
+#ifndef SPECTRENOTES_TEXTURE_H
+#define SPECTRENOTES_TEXTURE_H
 
 #include <string>
 #include <vector>
 #include <memory>
 #include <cmath>
 
-#include <pinkycore/pptypes.h>
+#include <spectrenotes/types.h>
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     // sample
     struct TexcelSample {
         Color rgb;
-        PPColorType a;
+        RTColorType a;
         
         TexcelSample():
             rgb(0.0),
             a(1.0)
         {}
         
-        void powRGB(PPColorType x) {
+        void powRGB(RTColorType x) {
             rgb.r = std::pow(rgb.r, x);
             rgb.g = std::pow(rgb.g, x);
             rgb.b = std::pow(rgb.b, x);
@@ -34,11 +34,11 @@ namespace PinkyPi {
         virtual ~Texture() {};
         
         // (0,0) to (1,1)
-        virtual TexcelSample sample(PPFloat x, PPFloat y, bool gammacorrect) const = 0;
+        virtual TexcelSample sample(RTFloat x, RTFloat y, bool gammacorrect) const = 0;
 
         TexcelSample sampleEquirectangular(const Vector3& v, bool gc) const {
-            PPFloat theta = std::acos(v.y) / kPI;
-            PPFloat phi = std::atan2(v.z, v.x) / kPI * 0.5 + 0.5;
+            RTFloat theta = std::acos(v.y) / kPI;
+            RTFloat phi = std::atan2(v.z, v.x) / kPI * 0.5 + 0.5;
             return sample(phi, theta, gc);
         }
         
@@ -61,9 +61,9 @@ namespace PinkyPi {
         ImageTexture(int w, int h);
         virtual ~ImageTexture();
         
-        virtual TexcelSample sample(PPFloat x, PPFloat y, bool gammacorrect) const;
+        virtual TexcelSample sample(RTFloat x, RTFloat y, bool gammacorrect) const;
         
-        void fillColor(const Color rgb, PPColorType a, double gamma);
+        void fillColor(const Color rgb, RTColorType a, double gamma);
         
         void initWith8BPPImage(const unsigned char *src, int comps, double gamma);
         void initWith16BPPImage(const unsigned short *src, int comps, double gamma);
@@ -75,7 +75,7 @@ namespace PinkyPi {
         int width;
         int height;
         bool hasAlpha;
-        PPFloat gamma;
+        RTFloat gamma;
         
         SampleType sampleType;
         WrapType wrapX;

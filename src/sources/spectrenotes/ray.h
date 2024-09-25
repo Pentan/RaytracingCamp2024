@@ -1,10 +1,10 @@
-#ifndef PINKYPI_RAY_H
-#define PINKYPI_RAY_H
+#ifndef SPECTRENOTES_RAY_H
+#define SPECTRENOTES_RAY_H
 
 #include <cmath>
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     struct Ray {
         Vector3 origin;
@@ -28,7 +28,7 @@ namespace PinkyPi {
             return ret;
         }
         
-        Vector3 pointAt(PPFloat t) const {
+        Vector3 pointAt(RTFloat t) const {
             return direction * t + origin;
         }
     };

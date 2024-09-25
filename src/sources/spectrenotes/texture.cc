@@ -1,6 +1,6 @@
 //
 //  texture.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2019/08/16.
 //
@@ -8,9 +8,9 @@
 #include <stb/stb_image.h>
 
 #include "texture.h"
-#include "pptypes.h"
+#include "types.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 // ImageTexture methods
 
@@ -30,15 +30,15 @@ ImageTexture::~ImageTexture() {
     delete [] image;
 }
 
-TexcelSample ImageTexture::sample(PPFloat x, PPFloat y, bool gammacorrect) const {
+TexcelSample ImageTexture::sample(RTFloat x, RTFloat y, bool gammacorrect) const {
     TexcelSample ret;
     
     x *= width;
     y *= height;
     int ix = static_cast<int>(std::floor(x));
     int iy = static_cast<int>(std::floor(y));
-    PPColorType tx = x - ix;
-    PPColorType ty = y - iy;
+    RTColorType tx = x - ix;
+    RTColorType ty = y - iy;
     
     ix = wrapSampleX(ix);
     iy = wrapSampleY(iy);
@@ -57,8 +57,8 @@ TexcelSample ImageTexture::sample(PPFloat x, PPFloat y, bool gammacorrect) const
             TexcelSample s01 = image[ix  + iy1 * width];
             TexcelSample s11 = image[ix1 + iy1 * width];
             
-            PPColorType tx0 = 1.0 - tx;
-            PPColorType tx1 = tx;
+            RTColorType tx0 = 1.0 - tx;
+            RTColorType tx1 = tx;
             
             TexcelSample s0010;
             s0010.rgb = s00.rgb * tx0 + s10.rgb * tx1;
@@ -67,8 +67,8 @@ TexcelSample ImageTexture::sample(PPFloat x, PPFloat y, bool gammacorrect) const
             s0111.rgb = s01.rgb * tx0 + s11.rgb * tx1;
             s0111.a = s01.a * tx0 + s11.a * tx1;
             
-            PPColorType ty0 = 1.0 - ty;
-            PPColorType ty1 = ty;
+            RTColorType ty0 = 1.0 - ty;
+            RTColorType ty1 = ty;
             ret.rgb = s0010.rgb * ty0 + s0111.rgb * ty1;
             ret.a = s0010.a * ty0 + s0111.a * ty1;
         }
@@ -80,7 +80,7 @@ TexcelSample ImageTexture::sample(PPFloat x, PPFloat y, bool gammacorrect) const
     return ret;
 }
 
-void ImageTexture::fillColor(const Color rgb, PPColorType a, double gamma) {
+void ImageTexture::fillColor(const Color rgb, RTColorType a, double gamma) {
     this->gamma = gamma;
     for(int i = 0; i < width * height; i++) {
         image[i].rgb = rgb;

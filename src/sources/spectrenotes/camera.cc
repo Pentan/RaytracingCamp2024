@@ -1,14 +1,14 @@
 //
 //  camera.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2019/08/16.
 //
 
 #include "camera.h"
 
-#include "pptypes.h"
-using namespace PinkyPi;
+#include "types.h"
+using namespace Spectrenotes;
 
 Camera::Camera():
     //focalLength(1.0),
@@ -41,14 +41,14 @@ void Camera::initWithType(CameraType t)
     }
 }
 
-Ray Camera::getRay(PPFloat tx, PPFloat ty, Random* rng)
+Ray Camera::getRay(RTFloat tx, RTFloat ty, Random* rng)
 {
     return getRayFunc(this, tx, ty, rng);
 }
 
-Ray Camera::getThinLensRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng) {
+Ray Camera::getThinLensRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng) {
     // forcus position
-    PPFloat h = std::tan(cam->perspective.yfov * 0.5);
+    RTFloat h = std::tan(cam->perspective.yfov * 0.5);
     Vector3 p(tx * h * cam->perspective.aspect, ty * h, -1);
     p = p * cam->focusDistance;
 
@@ -56,13 +56,13 @@ Ray Camera::getThinLensRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng) {
     // sensor height := 24[mm]
     // focul length = 12 / h
     // aperture diameter = focul length / f number
-    PPFloat apertuerR = 12.0 / (h * cam->fNumber) * 0.0005; // 0.5[diameter->radius] * 1/1000[mm->m]
+    RTFloat apertuerR = 12.0 / (h * cam->fNumber) * 0.0005; // 0.5[diameter->radius] * 1/1000[mm->m]
 
     // circle sample
-    PPFloat r = std::sqrt(rng->nextDoubleCC());
-    PPFloat theta = rng->nextDoubleCO() * 2.0 * kPI;
-    PPFloat sx = r * cos(theta);
-    PPFloat sy = r * sin(theta);
+    RTFloat r = std::sqrt(rng->nextDoubleCC());
+    RTFloat theta = rng->nextDoubleCO() * 2.0 * kPI;
+    RTFloat sx = r * cos(theta);
+    RTFloat sy = r * sin(theta);
 
     Vector3 o(sx * apertuerR, sy * apertuerR, 0.0);
     Vector3 d = p - o;
@@ -71,15 +71,15 @@ Ray Camera::getThinLensRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng) {
     return Ray(o, d);
 }
 
-Ray Camera::getPerspectiveRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng) {
-    PPFloat y = std::tan(cam->perspective.yfov * 0.5);
+Ray Camera::getPerspectiveRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng) {
+    RTFloat y = std::tan(cam->perspective.yfov * 0.5);
     Vector3 o(0.0, 0.0, 0.0);
     Vector3 d(tx * y * cam->perspective.aspect, ty * y, -1);
     d.normalize();
     return Ray(o, d);
 }
 
-Ray Camera::getOrthoRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng) {
+Ray Camera::getOrthoRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng) {
     Vector3 o(tx * cam->orthographics.xmag, ty * cam->orthographics.ymag, 0.0);
     Vector3 d(0.0, 0.0, -1.0);
     return Ray(o, d);

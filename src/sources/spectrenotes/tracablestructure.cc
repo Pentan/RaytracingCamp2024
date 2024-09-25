@@ -1,6 +1,6 @@
 //
 //  tracablestructure.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2022/08/14.
 //
@@ -13,7 +13,7 @@
 #include "bvh.h"
 #include "material.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 // StaticMeshStructure
 void StaticMeshStructure::initialize(int maxslice) {
@@ -51,7 +51,7 @@ void StaticMeshStructure::updateFinished() {
     // TODO
 }
 
-PPFloat StaticMeshStructure::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const {
+RTFloat StaticMeshStructure::intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const {
     Matrix4 gm;
     Matrix4 igm;
     
@@ -69,11 +69,11 @@ PPFloat StaticMeshStructure::intersection(const Ray& ray, PPFloat nearhit, PPFlo
     
     Ray lray = ray.transformed(igm);
     Vector3 lnearp = Matrix4::transformV3(igm, ray.pointAt(nearhit));
-    PPFloat lnearhit = (lnearp - lray.origin).length();
+    RTFloat lnearhit = (lnearp - lray.origin).length();
     Vector3 lfarp = Matrix4::transformV3(igm, ray.pointAt(farhit));
-    PPFloat lfarhit = (lfarp - lray.origin).length();
+    RTFloat lfarhit = (lfarp - lray.origin).length();
     
-    PPFloat lt = mesh->intersection(lray, lnearhit, lfarhit, oisect);
+    RTFloat lt = mesh->intersection(lray, lnearhit, lfarhit, oisect);
     if(lt < lnearhit) {
         return -1.0;
     }
@@ -84,7 +84,7 @@ PPFloat StaticMeshStructure::intersection(const Ray& ray, PPFloat nearhit, PPFlo
     return (ray.origin - ghp).length();
 }
 
-void StaticMeshStructure::intersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const {
+void StaticMeshStructure::intersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const {
     Matrix4 gm;
     Matrix4 igm;
     Matrix4 itgm;
@@ -106,9 +106,9 @@ void StaticMeshStructure::intersectionDetail(const Ray& ray, PPFloat hitt, PPTim
     auto attrB = cls->attributesAt(tri.b);
     auto attrC = cls->attributesAt(tri.c);
 
-    PPFloat wa = 1.0 - isect.vcb - isect.vcc;
-    PPFloat wb = isect.vcb;
-    PPFloat wc = isect.vcc;
+    RTFloat wa = 1.0 - isect.vcb - isect.vcc;
+    RTFloat wb = isect.vcb;
+    RTFloat wc = isect.vcc;
 
     odetail->barycentricCoord.set(wa, wb, wc);
     odetail->vertexAttributes[0] = attrA;
@@ -176,18 +176,18 @@ void SkinMeshStructure::updateFinished() {
     cache->updateBVH();
 }
 
-PPFloat SkinMeshStructure::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const {
+RTFloat SkinMeshStructure::intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const {
     if(!globalBounds.isIntersect(ray, nearhit, farhit)) {
         return -1.0;
     }
     
     // TODO
-    PPFloat ret = cache->intersection(ray, nearhit, farhit, timerate, oisect);
+    RTFloat ret = cache->intersection(ray, nearhit, farhit, timerate, oisect);
     
     return ret;
 }
 
-void SkinMeshStructure::intersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const {
+void SkinMeshStructure::intersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const {
     auto* cls = mesh->clusters[isect.clusterId].get();
     auto* ccache = cache->clusterCaches[isect.clusterId].get();
 
@@ -205,9 +205,9 @@ void SkinMeshStructure::intersectionDetail(const Ray& ray, PPFloat hitt, PPTimeT
 
     ctri.initialize(cacheA.vertex, cacheB.vertex, cacheC.vertex);
 
-    PPFloat wa = 1.0 - isect.vcb - isect.vcc;
-    PPFloat wb = isect.vcb;
-    PPFloat wc = isect.vcc;
+    RTFloat wa = 1.0 - isect.vcb - isect.vcc;
+    RTFloat wb = isect.vcb;
+    RTFloat wc = isect.vcc;
 
     odetail->barycentricCoord.set(wa, wb, wc);
     odetail->vertexAttributes[0] = attrA;

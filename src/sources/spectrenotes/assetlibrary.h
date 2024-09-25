@@ -1,11 +1,11 @@
-#ifndef PINKYPI_ASSETLIBRARY_H
-#define PINKYPI_ASSETLIBRARY_H
+#ifndef SPECTRENOTES_ASSETLIBRARY_H
+#define SPECTRENOTES_ASSETLIBRARY_H
 
 #include <string>
 #include <vector>
 #include <memory>
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class Mesh;
     class Material;

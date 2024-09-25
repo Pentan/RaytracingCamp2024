@@ -1,10 +1,10 @@
-#ifndef PINKYPI_CONFIG_H
-#define PINKYPI_CONFIG_H
+#ifndef SPECTRENOTES_CONFIG_H
+#define SPECTRENOTES_CONFIG_H
 
 #include <string>
-#include <pinkycore/pptypes.h>
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     class Config {
     public:
         int width;

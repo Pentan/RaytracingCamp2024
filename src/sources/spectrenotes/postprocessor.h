@@ -1,11 +1,11 @@
-#ifndef PINKYPI_POSTPROCESSOR_H
-#define PINKYPI_POSTPROCESSOR_H
+#ifndef SPECTRENOTES_POSTPROCESSOR_H
+#define SPECTRENOTES_POSTPROCESSOR_H
 
 #include <string>
 #include <atomic>
 #include <memory>
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class FrameBuffer;
     

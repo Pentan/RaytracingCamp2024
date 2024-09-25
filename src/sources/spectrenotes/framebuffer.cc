@@ -1,5 +1,5 @@
 #include "framebuffer.h"
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 FrameBuffer::FrameBuffer(int w, int h, int tsize):
     width(w),

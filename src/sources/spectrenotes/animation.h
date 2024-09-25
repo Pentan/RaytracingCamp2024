@@ -1,12 +1,12 @@
-#ifndef PINKYPI_ANIMATION_H
-#define PINKYPI_ANIMATION_H
+#ifndef SPECTRENOTES_ANIMATION_H
+#define SPECTRENOTES_ANIMATION_H
 
 #include <string>
 #include <vector>
 #include <memory>
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     class KeyframeSampler;
     class Node;
 

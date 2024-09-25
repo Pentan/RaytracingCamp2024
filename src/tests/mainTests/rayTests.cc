@@ -2,13 +2,13 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/ray.h>
-#include <pinkycore/aabb.h>
-#include <pinkycore/mesh.h>
-#include <pinkycore/bvh.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/ray.h>
+#include <spectrenotes/aabb.h>
+#include <spectrenotes/mesh.h>
+#include <spectrenotes/bvh.h>
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
 
@@ -40,7 +40,7 @@ TEST_CASE("Ray triangle test [Ray]") {
 
     Ray ray(Vector3(0.0, 0.0, 1.0), Vector3(0.0, 0.0, -1.0));
 
-    PPFloat bb, bc;
+    RTFloat bb, bc;
     bool h;
     
     h = tri.intersection(ray, 0.0, 10.0, &bb, &bc);

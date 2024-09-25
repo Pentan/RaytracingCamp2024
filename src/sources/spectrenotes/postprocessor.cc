@@ -5,7 +5,7 @@
 #include "postprocessor.h"
 #include "framebuffer.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 PostProcessor::PostProcessor() :
     sourceBuffer(nullptr),
@@ -54,7 +54,7 @@ bool PostProcessor::writeToFile(bool printlog) {
     std::vector<unsigned char> rgb8buf;
     rgb8buf.resize(w * h * 3);
     
-    auto encodeTo8byte = [](PPColorType c, double gamma) {
+    auto encodeTo8byte = [](RTColorType c, double gamma) {
         c = std::max(0.0, std::min(1.0, c));
         c = pow(c, 1.0 / gamma);
         return static_cast<unsigned char>(std::max(0.0, std::min(255.0, c * 256.0)));

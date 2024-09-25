@@ -1,7 +1,7 @@
-#ifndef PINKYPI_RENDER_SCHEDULER_H
-#define PINKYPI_RENDER_SCHEDULER_H
+#ifndef SPECTRENOTES_RENDER_SCHEDULER_H
+#define SPECTRENOTES_RENDER_SCHEDULER_H
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class Renderer;
     

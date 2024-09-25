@@ -1,14 +1,14 @@
-#ifndef PINKYPI_CAMERA_H
-#define PINKYPI_CAMERA_H
+#ifndef SPECTRENOTES_CAMERA_H
+#define SPECTRENOTES_CAMERA_H
 
 #include <string>
 #include <vector>
 #include <memory>
-#include "pptypes.h"
+#include "types.h"
 #include "ray.h"
 #include "random.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class Camera {
     public:
@@ -24,13 +24,13 @@ namespace PinkyPi {
         void initWithType(CameraType t);
         
         // tx and ty range is (-1,1)
-        Ray getRay(PPFloat tx, PPFloat ty, Random* rng);
+        Ray getRay(RTFloat tx, RTFloat ty, Random* rng);
 
-        static Ray getThinLensRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng);
-        static Ray getPerspectiveRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng);
-        static Ray getOrthoRay(Camera* cam, PPFloat tx, PPFloat ty, Random* rng);
+        static Ray getThinLensRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
+        static Ray getPerspectiveRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
+        static Ray getOrthoRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
 
-        Ray(*getRayFunc)(Camera*, PPFloat, PPFloat, Random*);
+        Ray(*getRayFunc)(Camera*, RTFloat, RTFloat, Random*);
 
         //
         std::string name;
@@ -38,23 +38,23 @@ namespace PinkyPi {
         
         union {
             struct {
-                PPFloat aspect;
-                PPFloat yfov;
-                PPFloat zfar;
-                PPFloat znear;
+                RTFloat aspect;
+                RTFloat yfov;
+                RTFloat zfar;
+                RTFloat znear;
             } perspective;
 
             struct {
-                PPFloat xmag;
-                PPFloat ymag;
-                PPFloat zfar;
-                PPFloat znear;
+                RTFloat xmag;
+                RTFloat ymag;
+                RTFloat zfar;
+                RTFloat znear;
             } orthographics;
         };
 
-        // PPFloat focalLength;    // [mm]
-        PPFloat fNumber;        // [focal length / diameter of entrance pupil]
-        PPFloat focusDistance;  // [m]
+        // RTFloat focalLength;    // [mm]
+        RTFloat fNumber;        // [focal length / diameter of entrance pupil]
+        RTFloat focusDistance;  // [m]
     };
 }
 

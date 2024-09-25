@@ -5,12 +5,12 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/material.h>
-#include <pinkycore/random.h>
-#include <pinkycore/ray.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/material.h>
+#include <spectrenotes/random.h>
+#include <spectrenotes/ray.h>
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     void SaveVectorsAsObj(std::string filename, std::vector<Vector3>& vecs) {
@@ -18,7 +18,7 @@ namespace {
         CheckTestOutputDir(outdir);
         
         std::stringstream ss;
-        ss << PINKYPI_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".obj";
+        ss << SPCTRNTS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".obj";
         std::string outpath = ss.str();
         
         std::fstream fs(outpath, std::ios_base::out);
@@ -66,12 +66,12 @@ TEST_CASE("Sampling Basis test [Material]") {
     SUBCASE("misc") {
         Vector3 vn, v0, v1;
         for(int ia = 0; ia < 256; ia++) {
-            PPFloat a = ia * 2.4;
-            PPFloat u = sin(a);
-            PPFloat v = cos(a);
+            RTFloat a = ia * 2.4;
+            RTFloat u = sin(a);
+            RTFloat v = cos(a);
             for(int ie = 0; ie < 16; ie++) {
-                PPFloat r = sin((ie + 0.5) / 16.0 * M_PI);
-                PPFloat y = sqrt(1.0 - r * r);
+                RTFloat r = sin((ie + 0.5) / 16.0 * M_PI);
+                RTFloat y = sqrt(1.0 - r * r);
                 vn.set(u * r, y, v * r);
                 Sampler::basisFromNormal(vn, &v0, &v1);
                 REQUIRE(Vector3::dot(vn, v0) == doctest::Approx(0.0).epsilon(kTestEPS));

@@ -1,9 +1,9 @@
-#ifndef PINKYPI_FRAMEBUFFER_H
-#define PINKYPI_FRAMEBUFFER_H
+#ifndef SPECTRENOTES_FRAMEBUFFER_H
+#define SPECTRENOTES_FRAMEBUFFER_H
 
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class FrameBuffer {
         

@@ -1,8 +1,8 @@
 #include "keyframesampler.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
-//int KeyframeSampler::nearestKeyframeIndex(PPTimeType time) const {
+//int KeyframeSampler::nearestKeyframeIndex(RTTimeType time) const {
 //    const int keyLastIndex = static_cast<int>(timeStamps.size() - 1);
 //    int keyindex;
 //    
@@ -26,7 +26,7 @@ using namespace PinkyPi;
 //    return keyindex;
 //}
 
-KeyframeSampler::KeyWeights KeyframeSampler::calclateKeyWeights(PPTimeType time) const {
+KeyframeSampler::KeyWeights KeyframeSampler::calclateKeyWeights(RTTimeType time) const {
     KeyWeights ret;
     const int keycount = static_cast<int>(timeStamps.size());
     const int keyLastIndex = keycount - 1;
@@ -71,8 +71,8 @@ KeyframeSampler::KeyWeights KeyframeSampler::calclateKeyWeights(PPTimeType time)
                 ret.weights[0] = 1.0;
                 ret.weights[1] = 0.0;
             } else {
-                PPTimeType ts0 = timeStamps[ret.keyindex[0]];
-                PPTimeType ts1 = timeStamps[ret.keyindex[1]];
+                RTTimeType ts0 = timeStamps[ret.keyindex[0]];
+                RTTimeType ts1 = timeStamps[ret.keyindex[1]];
                 ret.weights[1] = (time - ts0) / (ts1 - ts0);
                 ret.weights[0] = 1.0 - ret.weights[1];
             }
@@ -83,10 +83,10 @@ KeyframeSampler::KeyWeights KeyframeSampler::calclateKeyWeights(PPTimeType time)
     return ret;
 }
 
-void KeyframeSampler::sample(PPTimeType time, std::vector<PPFloat>& outbuf) {
+void KeyframeSampler::sample(RTTimeType time, std::vector<RTFloat>& outbuf) {
     KeyWeights kw = calclateKeyWeights(time);
-    PPFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
-    PPFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
+    RTFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
+    RTFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
 
     outbuf.resize(sampleComponents);
     for (size_t i = 0; i < sampleComponents; i++) {
@@ -105,10 +105,10 @@ void KeyframeSampler::sample(PPTimeType time, std::vector<PPFloat>& outbuf) {
     }
 }
 
-Vector3 KeyframeSampler::sampleVector3(PPTimeType time) {
+Vector3 KeyframeSampler::sampleVector3(RTTimeType time) {
     KeyWeights kw = calclateKeyWeights(time);
-    PPFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
-    PPFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
+    RTFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
+    RTFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
     
     Vector3 retv;
     switch (interpolation) {
@@ -129,10 +129,10 @@ Vector3 KeyframeSampler::sampleVector3(PPTimeType time) {
     return retv;
 }
 
-Vector4 KeyframeSampler::sampleVector4(PPTimeType time) {
+Vector4 KeyframeSampler::sampleVector4(RTTimeType time) {
     KeyWeights kw = calclateKeyWeights(time);
-    PPFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
-    PPFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
+    RTFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
+    RTFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
     
     Vector4 retv;
     switch (interpolation) {
@@ -154,10 +154,10 @@ Vector4 KeyframeSampler::sampleVector4(PPTimeType time) {
     return retv;
 }
 
-Quaterion KeyframeSampler::sampleQuaternion(PPTimeType time) {
+Quaterion KeyframeSampler::sampleQuaternion(RTTimeType time) {
     KeyWeights kw = calclateKeyWeights(time);
-    PPFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
-    PPFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
+    RTFloat* data0 = sampleBuffer.data() + kw.keyindex[0] * sampleComponents;
+    RTFloat* data1 = sampleBuffer.data() + kw.keyindex[1] * sampleComponents;
     
     Quaterion retq;
     switch (interpolation) {

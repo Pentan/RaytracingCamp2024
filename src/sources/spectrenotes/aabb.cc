@@ -3,14 +3,14 @@
 #include <limits>
 #include "aabb.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 AABB::AABB():
-	min(std::numeric_limits<PPFloat>::max()),
-	max(-std::numeric_limits<PPFloat>::max())
+	min(std::numeric_limits<RTFloat>::max()),
+	max(-std::numeric_limits<RTFloat>::max())
 {}
 
-AABB::AABB(const PPFloat minval, const PPFloat maxval)
+AABB::AABB(const RTFloat minval, const RTFloat maxval)
 {
 	if(minval < maxval) {
 		min = Vector3(minval);
@@ -35,8 +35,8 @@ AABB::AABB(const Vector3 minvec, const Vector3 maxvec)
 }
 
 void AABB::clear() {
-	min = Vector3(std::numeric_limits<PPFloat>::max());
-	max = Vector3(-std::numeric_limits<PPFloat>::max());
+	min = Vector3(std::numeric_limits<RTFloat>::max());
+	max = Vector3(-std::numeric_limits<RTFloat>::max());
 }
 
 Vector3 AABB::size() const {
@@ -72,13 +72,13 @@ bool AABB::isInside(const Vector3 &p) const {
 			(p.x < max.x && p.y < max.y && p.z < max.z) );
 }
 
-bool AABB::isIntersect(const Ray &ray, PPFloat tnear, PPFloat tfar) const {
-    PPFloat t = intersectDistance(ray);
+bool AABB::isIntersect(const Ray &ray, RTFloat tnear, RTFloat tfar) const {
+    RTFloat t = intersectDistance(ray);
     return (tnear <= t) && (t <= tfar);
 }
 
-PPFloat AABB::mightIntersectContent(const Ray &ray, PPFloat tfar) const {
-    PPFloat tmin, tmax;
+RTFloat AABB::mightIntersectContent(const Ray &ray, RTFloat tfar) const {
+    RTFloat tmin, tmax;
     bool ishit = testIntersect(ray, &tmin, &tmax);
     // miss
     if(!ishit) return -1.0;
@@ -90,8 +90,8 @@ PPFloat AABB::mightIntersectContent(const Ray &ray, PPFloat tfar) const {
     return (tmin <= tfar) ? tmin : -1.0;
 }
 
-PPFloat AABB::intersectDistance(const Ray &ray) const {
-    PPFloat tmin, tmax;
+RTFloat AABB::intersectDistance(const Ray &ray) const {
+    RTFloat tmin, tmax;
     bool ishit = testIntersect(ray, &tmin, &tmax);
     if(!ishit) {
         return -1.0;
@@ -99,15 +99,15 @@ PPFloat AABB::intersectDistance(const Ray &ray) const {
     return (tmin < 0.0) ? tmax : tmin;
 }
 
-bool AABB::testIntersect(const Ray &ray, PPFloat* otmin, PPFloat* otmax) const {
-	PPFloat largest_min = -std::numeric_limits<PPFloat>::max();
-    PPFloat smallest_max = std::numeric_limits<PPFloat>::max();
+bool AABB::testIntersect(const Ray &ray, RTFloat* otmin, RTFloat* otmax) const {
+	RTFloat largest_min = -std::numeric_limits<RTFloat>::max();
+    RTFloat smallest_max = std::numeric_limits<RTFloat>::max();
     bool ishit = true;
 	
 	for(int i = 0; i < 3; i++) {
-		PPFloat vdiv = 1.0 / ray.direction.v[i];
-		PPFloat tmpmin = (min.v[i] - ray.origin.v[i]) * vdiv;
-		PPFloat tmpmax = (max.v[i] - ray.origin.v[i]) * vdiv;
+		RTFloat vdiv = 1.0 / ray.direction.v[i];
+		RTFloat tmpmin = (min.v[i] - ray.origin.v[i]) * vdiv;
+		RTFloat tmpmax = (max.v[i] - ray.origin.v[i]) * vdiv;
         if(vdiv < 0.0) {
             std::swap(tmpmin, tmpmax);
         }

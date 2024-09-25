@@ -14,27 +14,26 @@
 #define TINYGLTF_NO_INCLUDE_STB_IMAGE_WRITE
 #include <tinygltf/tiny_gltf.h>
 
-#include <pinkycore/assetlibrary.h>
-#include <pinkycore/scene.h>
-#include <pinkycore/material.h>
-#include <pinkycore/texture.h>
-#include <pinkycore/mesh.h>
-#include <pinkycore/light.h>
-#include <pinkycore/node.h>
-#include <pinkycore/camera.h>
-#include <pinkycore/animation.h>
-#include <pinkycore/keyframesampler.h>
-#include <pinkycore/skin.h>
-#include <pinkycore/bvh.h>
-//#include <pinkycore/>
+#include <spectrenotes/assetlibrary.h>
+#include <spectrenotes/scene.h>
+#include <spectrenotes/material.h>
+#include <spectrenotes/texture.h>
+#include <spectrenotes/mesh.h>
+#include <spectrenotes/light.h>
+#include <spectrenotes/node.h>
+#include <spectrenotes/camera.h>
+#include <spectrenotes/animation.h>
+#include <spectrenotes/keyframesampler.h>
+#include <spectrenotes/skin.h>
+#include <spectrenotes/bvh.h>
 
 #include "sceneloader.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     // Constants
-    std::string kExtraPrefix = "PinkyPi-Extra-";
+    std::string kExtraPrefix = "Spectrenotes-Extra-";
 
     // Temporal vars
     struct SkinedMeshNode {
@@ -242,11 +241,11 @@ namespace {
     };
     
     // Utility functions
-    tinygltf::Value FindPinkyPiExtra(const tinygltf::Value& val, const std::string& targetKey) {
+    tinygltf::Value FindSpectrenotesExtra(const tinygltf::Value& val, const std::string& targetKey) {
         if(val.IsArray()) {
             size_t n = val.ArrayLen();
             for(size_t i = 0; i < n; i++) {
-                auto v = FindPinkyPiExtra(val.Get(static_cast<int>(i)), targetKey);
+                auto v = FindSpectrenotesExtra(val.Get(static_cast<int>(i)), targetKey);
                 if(v.Type() != tinygltf::NULL_TYPE) {
                     return v;
                 }
@@ -262,7 +261,7 @@ namespace {
                 } else {
                     auto& v = val.Get(k);
                     if(v.IsObject() || v.IsArray()) {
-                        return FindPinkyPiExtra(v, targetKey);
+                        return FindSpectrenotesExtra(v, targetKey);
                     }
                 }
             }
@@ -271,7 +270,7 @@ namespace {
         return tinygltf::Value();
     }
     
-    std::string getPinkyPiExtraKey(std::string key) {
+    std::string getSpectrenotesExtraKey(std::string key) {
         return kExtraPrefix + key;
     }
     
@@ -288,7 +287,7 @@ namespace {
             const tinygltf::Image& gltfimg = model.images.at(gltftex.source);
             
             double gamma = 2.2;
-            auto ppextra = FindPinkyPiExtra(gltfimg.extras, getPinkyPiExtraKey("gamma"));
+            auto ppextra = FindSpectrenotesExtra(gltfimg.extras, getSpectrenotesExtraKey("gamma"));
             if (ppextra.Type() != tinygltf::NULL_TYPE) {
                 gamma = ppextra.IsInt() ? ppextra.Get<int>() : ppextra.Get<double>();
             }
@@ -467,9 +466,9 @@ namespace {
             }
             
             // extra
-            auto ppextra = FindPinkyPiExtra(gltfmat.extras, getPinkyPiExtraKey("ior"));
+            auto ppextra = FindSpectrenotesExtra(gltfmat.extras, getSpectrenotesExtraKey("ior"));
             if (ppextra.Type() != tinygltf::NULL_TYPE) {
-                mat->ior = ppextra.Get<PPFloat>();
+                mat->ior = ppextra.Get<RTFloat>();
             }
             
             // Add
@@ -816,7 +815,7 @@ namespace {
                 int keycount = inputba.getTotalComponentCount();
                 kfsampler->timeStamps.resize(keycount);
                 for(int ikey = 0; ikey < keycount; ikey++) {
-                    kfsampler->timeStamps[ikey] = static_cast<PPTimeType>(inputba.readFloat());
+                    kfsampler->timeStamps[ikey] = static_cast<RTTimeType>(inputba.readFloat());
                 }
                 
                 int smplcount = outputba.getTotalComponentCount();
@@ -1001,17 +1000,17 @@ namespace {
 
             // DOF parameters needs before init
             tinygltf::Value ppextra;
-            //ppextra = FindPinkyPiExtra(gltfcam.extras, getPinkyPiExtraKey("focalLength"));
+            //ppextra = FindSpectrenotesExtra(gltfcam.extras, getSpectrenotesExtraKey("focalLength"));
             //if (ppextra.Type() != tinygltf::NULL_TYPE) {
-            //    cam->focalLength = ppextra.Get<PPFloat>();
+            //    cam->focalLength = ppextra.Get<RTFloat>();
             //}
-            ppextra = FindPinkyPiExtra(gltfcam.extras, getPinkyPiExtraKey("fNumber"));
+            ppextra = FindSpectrenotesExtra(gltfcam.extras, getSpectrenotesExtraKey("fNumber"));
             if (ppextra.Type() != tinygltf::NULL_TYPE) {
-                cam->fNumber = ppextra.Get<PPFloat>();
+                cam->fNumber = ppextra.Get<RTFloat>();
             }
-            ppextra = FindPinkyPiExtra(gltfcam.extras, getPinkyPiExtraKey("focusDistance"));
+            ppextra = FindSpectrenotesExtra(gltfcam.extras, getSpectrenotesExtraKey("focusDistance"));
             if (ppextra.Type() != tinygltf::NULL_TYPE) {
-                cam->focusDistance = ppextra.Get<PPFloat>();
+                cam->focusDistance = ppextra.Get<RTFloat>();
             }
             
             if (gltfcam.type.compare("perspective") == 0) {
@@ -1168,7 +1167,7 @@ namespace {
                 }
             }
 
-            auto ppextra = FindPinkyPiExtra(gltfscene.extras, getPinkyPiExtraKey("background"));
+            auto ppextra = FindSpectrenotesExtra(gltfscene.extras, getSpectrenotesExtraKey("background"));
             if (ppextra.Type() != tinygltf::NULL_TYPE) {
                 auto bgimg = ppextra.Get<std::string>();
                 bgImagePaths->insert(std::pair(count, bgimg));

@@ -1,12 +1,12 @@
-#ifndef PINKYPI_NODE_H
-#define PINKYPI_NODE_H
+#ifndef SPECTRENOTES_NODE_H
+#define SPECTRENOTES_NODE_H
 
 #include <string>
 #include <vector>
 #include <memory>
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class Camera;
     class Mesh;
@@ -37,14 +37,14 @@ namespace PinkyPi {
             Vector3 translate;
 
             void makeMatrix();
-            static Transform interpolate(const Transform& tf0, const Transform& tf1, PPFloat t);
+            static Transform interpolate(const Transform& tf0, const Transform& tf1, RTFloat t);
         };
 
     public:
         Node(int i);
         ~Node();
         
-        Matrix4 computeGlobalMatrix(PPTimeType tr) const;
+        Matrix4 computeGlobalMatrix(RTTimeType tr) const;
         
         std::string name;
         int index;

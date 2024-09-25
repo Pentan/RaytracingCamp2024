@@ -2,7 +2,7 @@
 #include "renderer.h"
 
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 RenderScheduler::RenderScheduler() {
 }

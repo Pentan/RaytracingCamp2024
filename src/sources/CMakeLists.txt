@@ -42,7 +42,7 @@ list(APPEND SPCTRNTS_CORE_SRCS
     ${SPCTRNTS_MAIN_DIR}/sceneloader.cc
 )
 list(APPEND SPCTRNTS_CORE_SRCS
-    ${SPCTRNTS_MAIN_DIR}/pptypes.h
+    ${SPCTRNTS_MAIN_DIR}/types.h
     ${SPCTRNTS_MAIN_DIR}/ray.h
     ${SPCTRNTS_MAIN_DIR}/aabb.h
     ${SPCTRNTS_MAIN_DIR}/config.h

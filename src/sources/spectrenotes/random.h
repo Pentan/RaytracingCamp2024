@@ -1,9 +1,9 @@
-#ifndef PINKYCORE_RANDOM_H
-#define PINKYCORE_RANDOM_H
+#ifndef SPECTRENOTES_RANDOM_H
+#define SPECTRENOTES_RANDOM_H
 
 #include <stdint.h>
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class Random {
         /*  Written in 2018 by David Blackman and Sebastiano Vigna (vigna@acm.org)

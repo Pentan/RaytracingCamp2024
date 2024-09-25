@@ -20,7 +20,7 @@
 
 #define USE_NEE 1
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     template<class T> void shuffleVector(std::vector<T>& v, Random& rng) {
@@ -32,8 +32,8 @@ namespace {
     }
 
     bool isValidIntersection(const Vector3& d, const SurfaceInfo& surf) {
-        PPFloat ds = Vector3::dot(d, surf.shadingNormal);
-        PPFloat gs = Vector3::dot(d, surf.geometryNormal);
+        RTFloat ds = Vector3::dot(d, surf.shadingNormal);
+        RTFloat gs = Vector3::dot(d, surf.geometryNormal);
         return ds * gs > 0.0;
     }
 }
@@ -144,7 +144,7 @@ void Renderer::pushRenderCommands(FrameBuffer* fb, int frameID, int spp, int ss)
     workerCondition.notify_all();
 }
 
-void Renderer::renderOneFrame(FrameBuffer* fb, PostProcessor* pp, PPTimeType opentime, PPTimeType closetime, int frameId) {
+void Renderer::renderOneFrame(FrameBuffer* fb, PostProcessor* pp, RTTimeType opentime, RTTimeType closetime, int frameId) {
     // scene setup
     std::cout << "  scene [" << opentime << "," << closetime << "] setup (" << TimeUtils::getElapsedTimeInSeconds() << ")" << std::endl;
     scene->seekTime(opentime, closetime, exposureSlice, 0);
@@ -208,7 +208,7 @@ void Renderer::render() {
         fb->clear();
         auto pp = postprocessors[frameBufferIndex].get();
         
-        PPTimeType t = (frameNumber - 1) / static_cast<PPTimeType>(fps); // from 0 to N-1
+        RTTimeType t = (frameNumber - 1) / static_cast<RTTimeType>(fps); // from 0 to N-1
         renderOneFrame(fb, pp, t, t + exposureSec, frameNumber);
         
         // wait
@@ -261,7 +261,7 @@ void Renderer::pathtrace(const Ray& iray, const Scene* scn, Context* cntx, Rende
     while(isloop) {
         SceneIntersection intersect;
         IntersectionDetail detail;
-        PPFloat hitt = scene->intersection(ray, kRayOffset, kFarAway, cntx->exposureTimeRate, &intersect);
+        RTFloat hitt = scene->intersection(ray, kRayOffset, kFarAway, cntx->exposureTimeRate, &intersect);
         if(hitt <= 0.0) {
             // background
             //radiance = Color::mul(throughput, Color(1.0, 1.0, 1.0));
@@ -319,12 +319,12 @@ void Renderer::pathtrace(const Ray& iray, const Scene* scn, Context* cntx, Rende
             auto smpl = Sampler::sampleCosineWeightedHemisphere(surfinfo.shadingNormal, rng);
             if (isValidIntersection(smpl.v, surfinfo)) {
                 Ray shdwray(surfinfo.position, smpl.v);
-                PPFloat shdwt = scene->intersection(shdwray, kRayOffset, kFarAway, cntx->exposureTimeRate, nullptr);
+                RTFloat shdwt = scene->intersection(shdwray, kRayOffset, kFarAway, cntx->exposureTimeRate, nullptr);
                 if (shdwt < 0.0) {
                     Material::EvalLog shadowlog;
-                    PPFloat fbxdf = hitmaterial->evaluateBXDF(ray, shdwray, materiallog.selectedBxdfId, surfinfo, &shadowlog);
+                    RTFloat fbxdf = hitmaterial->evaluateBXDF(ray, shdwray, materiallog.selectedBxdfId, surfinfo, &shadowlog);
                     auto texel = scene->backgroundTexture->sampleEquirectangular(shdwray.direction, false);
-                    PPFloat lmb = std::max(0.0, Vector3::dot(shdwray.direction, surfinfo.shadingNormal));
+                    RTFloat lmb = std::max(0.0, Vector3::dot(shdwray.direction, surfinfo.shadingNormal));
                     Color col = Color::mul(materiallog.filterColor, texel.rgb);
                     radiance += Color::mul(throughput, col) * lmb * fbxdf / (shadowlog.bxdfPdf * smpl.pdf);
                 }
@@ -364,7 +364,7 @@ void Renderer::pathtrace(const Ray& iray, const Scene* scn, Context* cntx, Rende
         }
 
         // lambert
-        PPFloat ndotd = Vector3::dot(nextray.direction, surfinfo.shadingNormal);
+        RTFloat ndotd = Vector3::dot(nextray.direction, surfinfo.shadingNormal);
         if(ndotd < 0.0) {
             ndotd = 0.0;
         }
@@ -376,7 +376,7 @@ void Renderer::pathtrace(const Ray& iray, const Scene* scn, Context* cntx, Rende
         //radiance = detail.texcoord0;
         //break;
 
-        //PPFloat dfs = Vector3::dot(detail.geometryNormal, Vector3(0.577, 0.577, 0.577)) * 0.5 + 0.5;
+        //RTFloat dfs = Vector3::dot(detail.geometryNormal, Vector3(0.577, 0.577, 0.577)) * 0.5 + 0.5;
         //radiance = material->baseColorFactor * dfs;
 
         //radiance = hitmaterial->baseColorFactor * (hitt - std::floor(hitt));
@@ -384,9 +384,9 @@ void Renderer::pathtrace(const Ray& iray, const Scene* scn, Context* cntx, Rende
         //+++++
         
         if(depth > minDepth) {
-            //PPFloat cutoff = throughput.getMaxComponent();
-            PPFloat cutoff = (throughput.x + throughput.y + throughput.z) / 3.0;
-            PPFloat q = std::max(minRussianRouletteCutOff, 1.0 - cutoff);
+            //RTFloat cutoff = throughput.getMaxComponent();
+            RTFloat cutoff = (throughput.x + throughput.y + throughput.z) / 3.0;
+            RTFloat q = std::max(minRussianRouletteCutOff, 1.0 - cutoff);
             if(rng.nextDoubleCO() < q){
                 break;
             }
@@ -422,7 +422,7 @@ void Renderer::renderJob(int workerid, JobCommand cmd) {
     int spp = cmd.render.samples;
     int subsp = cmd.render.subSamples;
 
-    PPFloat subPixelSize = 1.0 / subsp;
+    RTFloat subPixelSize = 1.0 / subsp;
     Node* cameraNode = scene->cameras[0];
     Camera *camera = cameraNode->content.camera;
     
@@ -439,8 +439,8 @@ void Renderer::renderJob(int workerid, JobCommand cmd) {
     
     for(int iy = tile.starty; iy < tile.endy; iy++) {
         for(int ix = tile.startx; ix < tile.endx; ix++) {
-            PPFloat px = PPFloat(ix);
-            PPFloat py = PPFloat(iy);
+            RTFloat px = RTFloat(ix);
+            RTFloat py = RTFloat(iy);
             int pixelId = tile.getPixelIndex(ix, iy);
             FrameBuffer::Pixel& pixel = cntx->framebuffer->getPixel(pixelId);
             
@@ -453,11 +453,11 @@ void Renderer::renderJob(int workerid, JobCommand cmd) {
                 if (spi == 0) {
                     shuffleVector(subPixelIndex, rng);
                 }
-                PPFloat ssx = PPFloat(subPixelIndex[spi] % subsp) * subPixelSize;
-                PPFloat ssy = PPFloat(subPixelIndex[spi] / subsp) * subPixelSize;
+                RTFloat ssx = RTFloat(subPixelIndex[spi] % subsp) * subPixelSize;
+                RTFloat ssy = RTFloat(subPixelIndex[spi] / subsp) * subPixelSize;
 
-                PPFloat sx = px + ssx + rng.nextDoubleCO() * subPixelSize;
-                PPFloat sy = py + ssy + rng.nextDoubleCO() * subPixelSize;
+                RTFloat sx = px + ssx + rng.nextDoubleCO() * subPixelSize;
+                RTFloat sy = py + ssy + rng.nextDoubleCO() * subPixelSize;
 
                 sx = (sx / cntx->framebuffer->getWidth()) * 2.0 - 1.0;
                 sy = (sy / cntx->framebuffer->getHeight()) * 2.0 - 1.0;

@@ -4,13 +4,13 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/config.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/config.h>
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 TEST_CASE("Load test [Config]") {
-    std::string path(PINKYPI_TEST_DATA_DIR"/config/testconfig00.json");
+    std::string path(SPCTRNTS_TEST_DATA_DIR"/config/testconfig00.json");
     
     Config config;
     bool loaded = config.load(path);

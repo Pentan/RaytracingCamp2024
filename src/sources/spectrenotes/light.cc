@@ -1,15 +1,15 @@
 //
 //  light.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2019/08/16.
 //
 
 #include "light.h"
-#include "pptypes.h"
+#include "types.h"
 #include "node.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 Light::Light():
     color(0.0, 0.0, 0.0),
@@ -23,7 +23,7 @@ Light::~Light() {
     
 }
 
-Color Light::evaluate(const Node* node, const SurfaceInfo& surf, PPTimeType timerate, EvalLog* log) const {
+Color Light::evaluate(const Node* node, const SurfaceInfo& surf, RTTimeType timerate, EvalLog* log) const {
     Color ret;
 
     switch (lightType)
@@ -32,7 +32,7 @@ Color Light::evaluate(const Node* node, const SurfaceInfo& surf, PPTimeType time
         {
             Vector3 lp = Matrix4::transformV3(node->computeGlobalMatrix(timerate), Vector3(0.0, 0.0, 0.0));
             Vector3 lv = lp - surf.position;
-            PPFloat ll = lv.length();
+            RTFloat ll = lv.length();
             lv = lv / ll;
             ret = color * intensity / (ll * ll);
 

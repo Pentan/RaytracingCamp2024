@@ -1,7 +1,7 @@
-#ifndef PINKYPI_SCENE_LOADER_H
-#define PINKYPI_SCENE_LOADER_H
+#ifndef SPECTRENOTES_SCENE_LOADER_H
+#define SPECTRENOTES_SCENE_LOADER_H
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class AssetLibrary;
     

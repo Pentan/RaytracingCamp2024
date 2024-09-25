@@ -4,12 +4,12 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/framebuffer.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/framebuffer.h>
 
 #include <stb/stb_image_write.h>
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     void OutputImage(std::string filename, int w, int h, unsigned char *data) {
@@ -17,7 +17,7 @@ namespace {
         CheckTestOutputDir(outdir);
         
         std::stringstream ss;
-        ss << PINKYPI_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".png";
+        ss << SPCTRNTS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".png";
         std::string outpath = ss.str();
         
         int res = stbi_write_png(outpath.c_str(), w, h, 3, data, 0);
@@ -37,9 +37,9 @@ TEST_CASE("FrameBuffer basic test [FrameBuffer]") {
     int h = fb.getHeight();
     
     for(int iy = 0; iy < h; iy++) {
-        PPFloat ty = (PPFloat)iy / (h - 1.0);
+        RTFloat ty = (RTFloat)iy / (h - 1.0);
         for(int ix = 0; ix < w; ix++) {
-            PPFloat tx = (PPFloat)ix / (w - 1.0);
+            RTFloat tx = (RTFloat)ix / (w - 1.0);
             fb.accumulate(ix, iy, Color(tx, ty, 0.0));
         }
     }
@@ -85,13 +85,13 @@ TEST_CASE("FrameBuffer basic test [FrameBuffer]") {
     fb.clear();
     int numTiles = fb.getNumTiles();
     for(int i = 0; i < numTiles; i++) {
-        PPFloat ft = (PPFloat)i / (numTiles - 1.0);
+        RTFloat ft = (RTFloat)i / (numTiles - 1.0);
         const FrameBuffer::Tile& tile = fb.getTile(i);
         
         for(int iy = tile.starty; iy < tile.endy; iy++) {
-            PPFloat fy = (PPFloat)(iy - tile.starty) / (tile.height - 1.0);
+            RTFloat fy = (RTFloat)(iy - tile.starty) / (tile.height - 1.0);
             for(int ix = tile.startx; ix < tile.endx; ix++) {
-                PPFloat fx = (PPFloat)(ix - tile.startx) / (tile.width - 1.0);
+                RTFloat fx = (RTFloat)(ix - tile.startx) / (tile.width - 1.0);
                 int ib = tile.getPixelIndex(ix, iy);
                 fb.accumulate(ib, Color(fx, fy, ft));
                 //fb.accumulate(ix, iy, Color(fx, fy, ft));

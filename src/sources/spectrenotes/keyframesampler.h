@@ -1,11 +1,11 @@
-#ifndef PINKYPI_KEYFRAMESAMPLER_H
-#define PINKYPI_KEYFRAMESAMPLER_H
+#ifndef SPECTRENOTES_KEYFRAMESAMPLER_H
+#define SPECTRENOTES_KEYFRAMESAMPLER_H
 
 #include <string>
 #include <vector>
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class KeyframeSampler {
     public:
@@ -17,24 +17,24 @@ namespace PinkyPi {
         
         struct KeyWeights {
             int keyindex[2];
-            PPFloat weights[2];
+            RTFloat weights[2];
         };
         
         KeyframeSampler()
             : interpolation(kLinear)
         {}
         
-//        int nearestKeyframeIndex(PPTimeType time) const;
-        KeyWeights calclateKeyWeights(PPTimeType time) const;
+//        int nearestKeyframeIndex(RTTimeType time) const;
+        KeyWeights calclateKeyWeights(RTTimeType time) const;
         
-        void sample(PPTimeType time, std::vector<PPFloat>& outbuf);
-        Vector3 sampleVector3(PPTimeType time);
-        Vector4 sampleVector4(PPTimeType time);
-        Quaterion sampleQuaternion(PPTimeType time);
+        void sample(RTTimeType time, std::vector<RTFloat>& outbuf);
+        Vector3 sampleVector3(RTTimeType time);
+        Vector4 sampleVector4(RTTimeType time);
+        Quaterion sampleQuaternion(RTTimeType time);
         
         InterpolationType interpolation;
-        std::vector<PPTimeType> timeStamps;
-        std::vector<PPFloat> sampleBuffer;
+        std::vector<RTTimeType> timeStamps;
+        std::vector<RTFloat> sampleBuffer;
         size_t sampleComponents;
     };
 }

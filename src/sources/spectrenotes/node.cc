@@ -1,6 +1,6 @@
 //
 //  node.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2019/08/16.
 //
@@ -10,8 +10,8 @@
 #include "tracablestructure.h"
 #include "bvh.h"
 
-#include "pptypes.h"
-using namespace PinkyPi;
+#include "types.h"
+using namespace Spectrenotes;
 
 Node::Node(int i):
     index(i),
@@ -36,7 +36,7 @@ Node::~Node() {
     
 }
 
-Matrix4 Node::computeGlobalMatrix(PPTimeType tr) const {
+Matrix4 Node::computeGlobalMatrix(RTTimeType tr) const {
     if(animatedFlag == 0) {
         return initialTransform.globalMatrix;
     } else {
@@ -51,8 +51,8 @@ Matrix4 Node::computeGlobalMatrix(PPTimeType tr) const {
             return pgm * initialTransform.matrix;
         } else {
             int lastindex = static_cast<int>(transformCache.size() - 1);
-            PPFloat ti = tr * static_cast<float>(lastindex);
-            PPFloat t = std::floor(ti);
+            RTFloat ti = tr * static_cast<float>(lastindex);
+            RTFloat t = std::floor(ti);
             int i0 = static_cast<int>(ti - t);
             int i1 = std::min(i0 + 1, lastindex);
             Transform tf = Transform::interpolate(transformCache[i0], transformCache[i1], t);
@@ -62,7 +62,7 @@ Matrix4 Node::computeGlobalMatrix(PPTimeType tr) const {
     }
 }
 
-Node::Transform Node::Transform::interpolate(const Transform& tf0, const Transform& tf1, PPFloat t) {
+Node::Transform Node::Transform::interpolate(const Transform& tf0, const Transform& tf1, RTFloat t) {
     Transform ret;
     ret.translate = Vector3::lerp(tf0.translate, tf1.translate, t);
     ret.rotation = Quaterion::slerp(tf0.rotation, tf1.rotation, t);

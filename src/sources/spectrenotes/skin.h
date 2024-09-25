@@ -1,11 +1,11 @@
-#ifndef PINKYPI_SKIN_H
-#define PINKYPI_SKIN_H
+#ifndef SPECTRENOTES_SKIN_H
+#define SPECTRENOTES_SKIN_H
 
 #include <string>
 #include <vector>
-#include "pptypes.h"
+#include "types.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     class Node;
     
     class Skin {

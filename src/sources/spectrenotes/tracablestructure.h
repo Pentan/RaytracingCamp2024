@@ -1,14 +1,14 @@
-#ifndef PINKYPI_TRACABLESTRUCTURE_H
-#define PINKYPI_TRACABLESTRUCTURE_H
+#ifndef SPECTRENOTES_TRACABLESTRUCTURE_H
+#define SPECTRENOTES_TRACABLESTRUCTURE_H
 
 #include <memory>
 #include <vector>
-#include "pptypes.h"
+#include "types.h"
 #include "ray.h"
 #include "aabb.h"
 #include "intersection.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     class Mesh;
     class MeshCache;
     class Skin;
@@ -29,8 +29,8 @@ namespace PinkyPi {
         virtual void clearSlice() = 0;
         virtual void updateSlice(int sliceId) = 0;
         virtual void updateFinished() = 0;
-        virtual PPFloat intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const = 0;
-        virtual void intersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const = 0;
+        virtual RTFloat intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const = 0;
+        virtual void intersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const = 0;
     };
     
     //
@@ -47,8 +47,8 @@ namespace PinkyPi {
         void clearSlice() override;
         void updateSlice(int sliceId) override;
         void updateFinished() override;
-        PPFloat intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const override;
-        void intersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const override;
+        RTFloat intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const override;
+        void intersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const override;
     };
     
     //
@@ -66,9 +66,9 @@ namespace PinkyPi {
         void clearSlice() override;
         void updateSlice(int sliceId) override;
         void updateFinished() override;
-        PPFloat intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const override;
-        void intersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const override;
+        RTFloat intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const override;
+        void intersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const MeshIntersection& isect, IntersectionDetail* odetail) const override;
     };
 }
 
-#endif /* PINKYPI_TRACABLESTRUCTURE_H */
+#endif /* SPECTRENOTES_TRACABLESTRUCTURE_H */

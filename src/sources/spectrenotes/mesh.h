@@ -1,17 +1,17 @@
-#ifndef PINKYPI_MESH_H
-#define PINKYPI_MESH_H
+#ifndef SPECTRENOTES_MESH_H
+#define SPECTRENOTES_MESH_H
 
 #include <string>
 #include <vector>
 #include <memory>
 #include <map>
-#include "pptypes.h"
+#include "types.h"
 #include "ray.h"
 #include "intersection.h"
 #include "aabb.h"
 #include "tracablestructure.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     /////
     class Material;
@@ -43,12 +43,12 @@ namespace PinkyPi {
             Vector3 edgeab;
             Vector3 edgeac;
             Vector3 normal;
-            PPFloat area;
-            PPFloat sampleBorder;
+            RTFloat area;
+            RTFloat sampleBorder;
             AABB bound; // dataId: cluster index, subDataId: triangle index
             
             void initialize(const Vector3& va, const Vector3& vb, const Vector3& vc);
-            PPFloat intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPFloat *obb, PPFloat *obc) const;
+            RTFloat intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTFloat *obb, RTFloat *obc) const;
         };
         
         class Cluster {
@@ -64,7 +64,7 @@ namespace PinkyPi {
             std::vector<Triangle> triangles;
             Material *material;
             
-            PPFloat area;
+            RTFloat area;
             AABB bounds;
 
             size_t attributeCounts[kNumAttrs];
@@ -96,7 +96,7 @@ namespace PinkyPi {
         
         void preprocess();
         
-        PPFloat intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, MeshIntersection* oisect) const;
+        RTFloat intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, MeshIntersection* oisect) const;
         void triangleAttributes(int clusterId, int triangleId, Attributes* oattr3) const;
     };
     
@@ -119,12 +119,12 @@ namespace PinkyPi {
             void createTransformed(int sliceid, const Matrix4& m);
             void createSkinDeformed(int sliceid, const Matrix4& m, const std::vector<Matrix4>& mplt, const std::vector<Matrix4>& itmplt);
 
-            CachedAttribute interpolatedCache(int vid, PPTimeType timerate) const;
+            CachedAttribute interpolatedCache(int vid, RTTimeType timerate) const;
             
             Mesh::Cluster* sourceCluster;
             // per slice data
             std::vector<std::vector<CachedAttribute> > cachedVertices;
-            std::vector<PPFloat> sliceArea;
+            std::vector<RTFloat> sliceArea;
             std::vector<AABB> sliceBounds;
 
             // whole slice data
@@ -147,7 +147,7 @@ namespace PinkyPi {
         }
 
         void updateBVH();
-        PPFloat intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const;
+        RTFloat intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const;
     };
 }
 

@@ -1,12 +1,12 @@
 #include <cstdio>
 #include <iostream>
 
-#include <pinkycore/assetlibrary.h>
-#include <pinkycore/scene.h>
-#include <pinkycore/bvh.h>
-#include <pinkycore/renderer.h>
-#include <pinkycore/config.h>
-#include <pinkycore/postprocessor.h>
+#include <spectrenotes/assetlibrary.h>
+#include <spectrenotes/scene.h>
+#include <spectrenotes/bvh.h>
+#include <spectrenotes/renderer.h>
+#include <spectrenotes/config.h>
+#include <spectrenotes/postprocessor.h>
 
 #include "sceneloader.h"
 
@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     std::cout << "Hellooooo Pinky Pi!\n" << std::endl;
     
     std::string configPath = "data/config.json";
-    PinkyPi::Config config;
+    Spectrenotes::Config config;
     if(!config.load(configPath)) {
         std::cerr << "config load failed. use default settings." << std::endl;
     }
@@ -27,14 +27,14 @@ int main(int argc, char* argv[])
     
     // check output dir?
     
-    PinkyPi::AssetLibrary *assetlib = nullptr;
-    PinkyPi::Scene *scene = nullptr;
+    Spectrenotes::AssetLibrary *assetlib = nullptr;
+    Spectrenotes::Scene *scene = nullptr;
     
     if(config.inputFile.length() > 0) {
-        assetlib = PinkyPi::SceneLoader::load(config.inputFile);
+        assetlib = Spectrenotes::SceneLoader::load(config.inputFile);
         scene = assetlib->getDefaultScene();
     } else {
-//        scene = PinkyPi::Scene::buildDefaultScene();
+//        scene = Spectrenotes::Scene::buildDefaultScene();
     }
     
     if(scene == nullptr) {
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     
     scene->preprocess(&config);
     
-    PinkyPi::Renderer renderer(config, scene);
+    Spectrenotes::Renderer renderer(config, scene);
     renderer.render();
     
     delete scene;

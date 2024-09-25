@@ -14,7 +14,7 @@
 #include "keyframesampler.h"
 #include "config.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 Scene::Scene(AssetLibrary* al) :
     assetLib(al)
@@ -94,11 +94,11 @@ void Scene::preprocessTraverse(Node *node, Matrix4 gm, Config* config) {
     }
 }
 
-void Scene::seekTime(PPTimeType opentime, PPTimeType closetime, int slice, int storeId) {
-    PPTimeType tdiv = static_cast<PPTimeType>(std::max(1, slice - 1)); // [0,1]
+void Scene::seekTime(RTTimeType opentime, RTTimeType closetime, int slice, int storeId) {
+    RTTimeType tdiv = static_cast<RTTimeType>(std::max(1, slice - 1)); // [0,1]
     for(int islc = 0; islc < slice; islc++) {
-        PPTimeType t = static_cast<PPTimeType>(islc) / tdiv;
-        PPTimeType curtime = opentime * (1.0 - t) + closetime * t;
+        RTTimeType t = static_cast<RTTimeType>(islc) / tdiv;
+        RTTimeType curtime = opentime * (1.0 - t) + closetime * t;
         
         // update node transform
         for(auto ianim = assetLib->animations.begin(); ianim != assetLib->animations.end(); ++ianim) {
@@ -154,10 +154,10 @@ void Scene::seekTime(PPTimeType opentime, PPTimeType closetime, int slice, int s
     buildAccelerationStructure(storeId);
 }
 
-PPFloat Scene::intersection(const Ray& ray, PPFloat hitnear, PPFloat hitfar, PPTimeType timerate, SceneIntersection *oisect) const {
+RTFloat Scene::intersection(const Ray& ray, RTFloat hitnear, RTFloat hitfar, RTTimeType timerate, SceneIntersection *oisect) const {
     MeshIntersection meshisect;
     int traceableid = -1;
-    PPFloat mint = -1.0;
+    RTFloat mint = -1.0;
 
 #if 0
     // blute force -----
@@ -165,7 +165,7 @@ PPFloat Scene::intersection(const Ray& ray, PPFloat hitnear, PPFloat hitfar, PPT
     for(int i = 0; i < numMeshes; i++) {
         MeshIntersection isect;
         auto* trc = tracables[i]->tracable.get();
-        PPFloat t = trc->intersection(ray, hitnear, hitfar, timerate, &isect);
+        RTFloat t = trc->intersection(ray, hitnear, hitfar, timerate, &isect);
         if(t > 0.0) {
             if(mint > t || mint < 0.0) {
                 mint = t;
@@ -184,14 +184,14 @@ PPFloat Scene::intersection(const Ray& ray, PPFloat hitnear, PPFloat hitfar, PPT
     struct {
         MeshIntersection meshisect;
         int traceableid;
-        PPFloat mint;
+        RTFloat mint;
     } hitinfo;
     
     hitinfo.mint = -1.0;
-    mint = objectBVH->intersect(ray, hitnear, hitfar, [this, &hitinfo, &timerate](const Ray& ray, PPFloat neart, PPFloat fart, const AABB* bnd) {
+    mint = objectBVH->intersect(ray, hitnear, hitfar, [this, &hitinfo, &timerate](const Ray& ray, RTFloat neart, RTFloat fart, const AABB* bnd) {
         MeshIntersection isect;
         auto* trc = tracables[bnd->dataId]->tracable.get();
-        PPFloat t = trc->intersection(ray, neart, fart, timerate, &isect);
+        RTFloat t = trc->intersection(ray, neart, fart, timerate, &isect);
         if(t > 0.0) {
             if(hitinfo.mint > t || hitinfo.mint < 0.0) {
                 hitinfo.mint = t;
@@ -216,7 +216,7 @@ PPFloat Scene::intersection(const Ray& ray, PPFloat hitnear, PPFloat hitfar, PPT
     return mint;
 }
 
-void Scene::computeIntersectionDetail(const Ray& ray, PPFloat hitt, PPTimeType timerate, const SceneIntersection& isect, IntersectionDetail* odetail) const {
+void Scene::computeIntersectionDetail(const Ray& ray, RTFloat hitt, RTTimeType timerate, const SceneIntersection& isect, IntersectionDetail* odetail) const {
     auto* trc = tracables[isect.tracableId]->tracable.get();
     trc->intersectionDetail(ray, hitt, timerate, isect.meshIntersect, odetail);
 }

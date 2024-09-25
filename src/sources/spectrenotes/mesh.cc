@@ -1,6 +1,6 @@
 //
 //  mesh.cpp
-//  PinkyCore
+//  Spectrenotes
 //
 //  Created by SatoruNAKAJIMA on 2019/08/16.
 //
@@ -8,9 +8,9 @@
 #include "node.h"
 #include "mesh.h"
 #include "bvh.h"
-#include "pptypes.h"
+#include "types.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 Mesh::Cluster::Cluster(int numverts, int numtris, const std::map<AttributeId, int>& attrdesc):
     material(nullptr)
@@ -71,7 +71,7 @@ void Mesh::Triangle::initialize(const Vector3& va, const Vector3& vb, const Vect
     edgeab = vb - va;
     edgeac = vc - va;
     Vector3 n = Vector3::cross(edgeab, edgeac);
-    PPFloat nl = n.length();
+    RTFloat nl = n.length();
     normal = n / std::max(1e-8, nl);
     area = nl;
     bound.clear();
@@ -80,16 +80,16 @@ void Mesh::Triangle::initialize(const Vector3& va, const Vector3& vb, const Vect
     bound.expand(vc);
 }
 
-PPFloat Mesh::Triangle::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPFloat *obb, PPFloat *obc) const
+RTFloat Mesh::Triangle::intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTFloat *obb, RTFloat *obc) const
 {
     Vector3 r = ray.origin - pa;
     Vector3 u = Vector3::cross(ray.direction, edgeac);
     Vector3 v = Vector3::cross(r, edgeab);
     
-    PPFloat div = 1.0 / Vector3::dot(u, edgeab);
-    PPFloat t = Vector3::dot(v, edgeac) * div;
-    PPFloat b = Vector3::dot(u, r) * div;
-    PPFloat c = Vector3::dot(v, ray.direction) * div;
+    RTFloat div = 1.0 / Vector3::dot(u, edgeab);
+    RTFloat t = Vector3::dot(v, edgeac) * div;
+    RTFloat b = Vector3::dot(u, r) * div;
+    RTFloat c = Vector3::dot(v, ray.direction) * div;
     
     if((b < 0.0) || (c < 0.0) || (b + c > 1.0) || (t < nearhit) || (t > farhit)) {
         return -1.0;
@@ -121,12 +121,12 @@ void Mesh::preprocess() {
     auto* bvh = triangleBVH.get();
     
     // int triangles
-    PPFloat meshArea = 0.0;
+    RTFloat meshArea = 0.0;
     for(int icl = 0; icl < clusters.size(); icl++) {
         auto c = clusters[icl].get();
         c->bounds.clear();
         
-        PPFloat clusterArea = 0.0;
+        RTFloat clusterArea = 0.0;
         for(int itri = 0; itri < c->triangles.size(); itri++) {
             Triangle& tri = c->triangles[itri];
             
@@ -152,18 +152,18 @@ void Mesh::preprocess() {
     bvh->build();
 }
 
-PPFloat Mesh::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, MeshIntersection* oisect) const
+RTFloat Mesh::intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, MeshIntersection* oisect) const
 {
     if(!bounds.isIntersect(ray, nearhit, farhit)) {
         return -1.0;
     }
     
-    PPFloat mint = -1.0;
+    RTFloat mint = -1.0;
     int triId = -1;
     int clusterId = -1;
-    PPFloat vcb = 0.0;
-    PPFloat vcc = 0.0;
-    PPFloat fart = farhit;
+    RTFloat vcb = 0.0;
+    RTFloat vcc = 0.0;
+    RTFloat fart = farhit;
 
 #if 0
     // blute force -----
@@ -177,9 +177,9 @@ PPFloat Mesh::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, Mesh
         int numTris = static_cast<int>(cls->triangles.size());
         for(int itri = 0; itri < numTris; itri++) {
             const Triangle& tri = cls->triangles[itri];
-            PPFloat tb = 0.0;
-            PPFloat tc = 0.0;
-            PPFloat thit = tri.intersection(ray, nearhit, fart, &tb, &tc);
+            RTFloat tb = 0.0;
+            RTFloat tc = 0.0;
+            RTFloat thit = tri.intersection(ray, nearhit, fart, &tb, &tc);
             if(thit > 0.0) {
                 if(mint > thit || mint < 0.0) {
                     mint = thit;
@@ -195,21 +195,21 @@ PPFloat Mesh::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, Mesh
     //-----
 #else
     struct {
-        PPFloat mint;
+        RTFloat mint;
         int clusterId;
         int triId;
-        PPFloat vb, vc;
+        RTFloat vb, vc;
     } hitInfo;
 
     memset(&hitInfo, 0, sizeof(hitInfo));
     hitInfo.mint = -1.0;
-    PPFloat mintb = triangleBVH->intersect(ray, nearhit, farhit, [this, &hitInfo](const Ray& ray, PPFloat neart, PPFloat fart, const AABB* tribnd) {
+    RTFloat mintb = triangleBVH->intersect(ray, nearhit, farhit, [this, &hitInfo](const Ray& ray, RTFloat neart, RTFloat fart, const AABB* tribnd) {
         const int clsId = tribnd->dataId;
         const int triId = tribnd->subDataId;
         const Triangle& tri = clusters[clsId]->triangles[triId];
-        PPFloat b;
-        PPFloat c;
-        PPFloat t = tri.intersection(ray, neart, fart, &b, &c);
+        RTFloat b;
+        RTFloat c;
+        RTFloat t = tri.intersection(ray, neart, fart, &b, &c);
         if (t > 0.0) {
             if (hitInfo.mint > t || hitInfo.mint < 0.0) {
                 hitInfo.mint = t;
@@ -331,7 +331,7 @@ void MeshCache::ClusterCache::createSkinDeformed(int sliceid, const Matrix4& m, 
     const int numinfl = sourceCluster->attributeCount(Mesh::AttributeId::kWeights);
     for (size_t i = 0; i < sourceCluster->vertices.size(); i++) {
         Attributes attrs = sourceCluster->attributesAt(static_cast<int>(i));
-        PPFloat totalWeights = 0.0;
+        RTFloat totalWeights = 0.0;
 
         const auto& sv = sourceCluster->vertices[i];
         const auto& sn = *attrs.normal;
@@ -376,10 +376,10 @@ void MeshCache::ClusterCache::createSkinDeformed(int sliceid, const Matrix4& m, 
     wholeBounds.expand(bnd);
 }
 
-MeshCache::CachedAttribute MeshCache::ClusterCache::interpolatedCache(int vid, PPTimeType timerate) const {
+MeshCache::CachedAttribute MeshCache::ClusterCache::interpolatedCache(int vid, RTTimeType timerate) const {
     int slicelast = static_cast<int>(cachedVertices.size() - 1);
-    PPTimeType slicerate = timerate * slicelast;
-    PPTimeType t = slicerate - std::floor(slicerate);
+    RTTimeType slicerate = timerate * slicelast;
+    RTTimeType t = slicerate - std::floor(slicerate);
     int i0 = static_cast<int>(std::floor(slicerate));
     int i1 = std::min(i0 + 1, slicelast);
 
@@ -418,19 +418,19 @@ void MeshCache::updateBVH() {
     bvh->build();
 }
 
-PPFloat MeshCache::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit, PPTimeType timerate, MeshIntersection* oisect) const {
+RTFloat MeshCache::intersection(const Ray& ray, RTFloat nearhit, RTFloat farhit, RTTimeType timerate, MeshIntersection* oisect) const {
 
-    PPFloat mint = -1.0;
+    RTFloat mint = -1.0;
     int triId = -1;
     int clusterId = -1;
-    PPFloat vcb = 0.0;
-    PPFloat vcc = 0.0;
+    RTFloat vcb = 0.0;
+    RTFloat vcc = 0.0;
 
 #if 0
     // blute force -----
     int numCls = static_cast<int>(clusterCaches.size());
     Mesh::Triangle tmptri;
-    PPFloat fatt = farhit;
+    RTFloat fatt = farhit;
     for(int icls = 0; icls < numCls; icls++) {
         const auto *ccache = clusterCaches[icls].get();
         //if(!ccache->wholeBounds.isIntersect(ray, nearhit, fatt)) {
@@ -449,9 +449,9 @@ PPFloat MeshCache::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit,
             auto cvc = ccache->interpolatedCache(tri.c, timerate);
             
             tmptri.initialize(cva.vertex, cvb.vertex, cvc.vertex);
-            PPFloat b;
-            PPFloat c;
-            PPFloat thit = tmptri.intersection(ray, nearhit, fatt, &b, &c);
+            RTFloat b;
+            RTFloat c;
+            RTFloat thit = tmptri.intersection(ray, nearhit, fatt, &b, &c);
             if(thit > 0.0) {
                 if(mint > thit || mint < 0.0) {
                     mint = thit;
@@ -469,14 +469,14 @@ PPFloat MeshCache::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit,
 #else
     // BVH
     struct {
-        PPFloat mint;
+        RTFloat mint;
         int clusterId;
         int triId;
-        PPFloat vb, vc;
+        RTFloat vb, vc;
     } hitInfo;
 
     hitInfo.mint = -1.0;
-    mint = skinedBVH->intersect(ray, nearhit, farhit, [this, &hitInfo, timerate](const Ray& ray, PPFloat neart, PPFloat fart, const AABB* tribnd) {
+    mint = skinedBVH->intersect(ray, nearhit, farhit, [this, &hitInfo, timerate](const Ray& ray, RTFloat neart, RTFloat fart, const AABB* tribnd) {
         const int clsId = tribnd->dataId;
         const int triId = tribnd->subDataId;
         const auto* cls = mesh->clusters[clsId].get();
@@ -490,9 +490,9 @@ PPFloat MeshCache::intersection(const Ray& ray, PPFloat nearhit, PPFloat farhit,
         Mesh::Triangle tmptri;
         tmptri.initialize(cva.vertex, cvb.vertex, cvc.vertex);
 
-        PPFloat b;
-        PPFloat c;
-        PPFloat t = tmptri.intersection(ray, neart, fart, &b, &c);
+        RTFloat b;
+        RTFloat c;
+        RTFloat t = tmptri.intersection(ray, neart, fart, &b, &c);
         if (t > 0.0) {
             if (hitInfo.mint > t || hitInfo.mint < 0.0) {
                 hitInfo.mint = t;

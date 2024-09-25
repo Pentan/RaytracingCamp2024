@@ -3,7 +3,7 @@
 
 #include "testconfig.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     #define kTestEPS 1e-10
     
     void CheckTestOutputDir(std::string dir);

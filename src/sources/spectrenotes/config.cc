@@ -5,7 +5,7 @@
 
 #include "config.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 namespace {
     template <typename T> T GetConfigValue(nlohmann::json &json, std::string key, T defaultValue) {

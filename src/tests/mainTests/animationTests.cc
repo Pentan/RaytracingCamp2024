@@ -4,14 +4,14 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <pinkycore/pptypes.h>
-#include <pinkycore/animation.h>
-#include <pinkycore/keyframesampler.h>
+#include <spectrenotes/types.h>
+#include <spectrenotes/animation.h>
+#include <spectrenotes/keyframesampler.h>
 
-//#include <pinkycore/assetlibrary.h>
-//#include <pinkycore/scene.h>
+//#include <spectrenotes/assetlibrary.h>
+//#include <spectrenotes/scene.h>
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 
 TEST_CASE("KayframeSampler uniform key v3 Test [Animation]") {
     KeyframeSampler ks;
@@ -77,7 +77,7 @@ TEST_CASE("KayframeSampler uniform key v3 Test [Animation]") {
     }
     
     SUBCASE("iterpolation") {
-        const PPTimeType t = 0.5;
+        const RTTimeType t = 0.5;
         Vector3 v;
         Vector3 v0(0.33, 1.0, 1.5);
         Vector3 v1(0.66, 2.0, -0.5);
@@ -164,7 +164,7 @@ TEST_CASE("KayframeSampler v4 Test [Animation]") {
     }
     
     SUBCASE("iterpolation") {
-        const PPTimeType t = 0.5;
+        const RTTimeType t = 0.5;
         Vector4 v;
         Vector4 v0(0.33, 1.0, 1.5, 2.0);
         Vector4 v1(0.66, 2.0, -0.5, -2.0);

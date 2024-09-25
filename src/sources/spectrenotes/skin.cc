@@ -1,4 +1,4 @@
 #include "skin.h"
 
-using namespace PinkyPi;
+using namespace Spectrenotes;
 

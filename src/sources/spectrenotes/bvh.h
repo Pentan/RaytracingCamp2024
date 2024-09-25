@@ -1,12 +1,12 @@
-#ifndef PINKYPI_BVH_H
-#define PINKYPI_BVH_H
+#ifndef SPECTRENOTES_BVH_H
+#define SPECTRENOTES_BVH_H
 
 #include <vector>
 #include <memory>
 #include <functional>
 #include "aabb.h"
 
-namespace PinkyPi {
+namespace Spectrenotes {
     
     class BVH {
     private:
@@ -29,7 +29,7 @@ namespace PinkyPi {
         
     public:
         //struct TraverseInfo {
-        //    PPFloat(*leafHitCallback)(const Ray&, PPFloat, PPFloat, const AABB*, void*);
+        //    RTFloat(*leafHitCallback)(const Ray&, RTFloat, RTFloat, const AABB*, void*);
         //    void* userRef;
         //};
 
@@ -42,17 +42,17 @@ namespace PinkyPi {
         void updateAllLeafBounds();
         void build();
 
-        typedef std::function<PPFloat(const Ray&, PPFloat, PPFloat, const AABB*)> HitCallback;
+        typedef std::function<RTFloat(const Ray&, RTFloat, RTFloat, const AABB*)> HitCallback;
 
-        // PPFloat intersect(const Ray& ray, PPFloat tnear, PPFloat tfar, const TraverseInfo* tinfo) const;
-        PPFloat intersect(const Ray& ray, PPFloat tnear, PPFloat tfar, HitCallback hitfunc) const;
+        // RTFloat intersect(const Ray& ray, RTFloat tnear, RTFloat tfar, const TraverseInfo* tinfo) const;
+        RTFloat intersect(const Ray& ray, RTFloat tnear, RTFloat tfar, HitCallback hitfunc) const;
  
 
     private:
         TreeNode* allocateTreeNode(const AABB* bnd);
         TreeNode* buildTree(TreeNode** childnodes, int numchild, int depth);
-        //PPFloat traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tnear, PPFloat tfar, const TraverseInfo* tinfo) const;
-        PPFloat traverseIntersect(const TreeNode* node, const Ray& ray, PPFloat tnear, PPFloat tfar, HitCallback hitfunc) const;
+        //RTFloat traverseIntersect(const TreeNode* node, const Ray& ray, RTFloat tnear, RTFloat tfar, const TraverseInfo* tinfo) const;
+        RTFloat traverseIntersect(const TreeNode* node, const Ray& ray, RTFloat tnear, RTFloat tfar, HitCallback hitfunc) const;
 
         static int compareTreeNodeX(const void* a, const void* b);
         static int compareTreeNodeY(const void* a, const void* b);
