@@ -34,3 +34,6 @@
 # directories
 local_data
 build
+
+# auto generate
+src/tests/testconfig.h

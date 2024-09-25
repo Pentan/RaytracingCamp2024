@@ -1,16 +1,11 @@
 # tests/CMakeLists.txt
 
-# add_subdirectory(coreTests)
-# add_subdirectory(linearalgebraTests)
-# add_subdirectory(pinkypiTests)
-
 # Config
-
-set(TEST_OUTPUT_DIR "\"${PINKYPI_TTEST_DIR}/output\"")
-set(TEST_DATA_DIR "\"${PINKYPI_TTEST_DIR}/testdata\"")
+set(TEST_OUTPUT_DIR "\"${SPCTRNTS_TEST_DIR}/output\"")
+set(TEST_DATA_DIR "\"${SPCTRNTS_TEST_DIR}/testdata\"")
 configure_file(
-    "${PINKYPI_TTEST_DIR}/testconfig.h.in"
-    "${PINKYPI_TTEST_DIR}/testconfig.h"
+    "${SPCTRNTS_TEST_DIR}/testconfig.h.in"
+    "${SPCTRNTS_TEST_DIR}/testconfig.h"
 )
 
 # Linear Algebra
@@ -24,28 +19,23 @@ set(LINEARALGEBRA_TESTS_SRCS
 source_group(linearalgebraTests FILES ${LINEARALGEBRA_TESTS_SRCS})
 
 # Core
-set(PINKYCORE_TEST_DIR coreTests)
-set(PINKYCORE_TESTS_SRCS 
-    ${PINKYCORE_TEST_DIR}/aabbTests.cc
-    ${PINKYCORE_TEST_DIR}/framebufferTests.cc
-    ${PINKYCORE_TEST_DIR}/randomTests.cc
-    ${PINKYCORE_TEST_DIR}/configTests.cc
-    ${PINKYCORE_TEST_DIR}/animationTests.cc
-    ${PINKYCORE_TEST_DIR}/rayTests.cc
-    ${PINKYCORE_TEST_DIR}/bvhTests.cc
-    ${PINKYCORE_TEST_DIR}/textureTests.cc
-    ${PINKYCORE_TEST_DIR}/materialTests.cc
+set(MAIN_TEST_DIR mainTests)
+set(MAIN_TESTS_SRCS 
+    ${MAIN_TEST_DIR}/aabbTests.cc
+    ${MAIN_TEST_DIR}/framebufferTests.cc
+    ${MAIN_TEST_DIR}/randomTests.cc
+    ${MAIN_TEST_DIR}/configTests.cc
+    ${MAIN_TEST_DIR}/animationTests.cc
+    ${MAIN_TEST_DIR}/rayTests.cc
+    ${MAIN_TEST_DIR}/bvhTests.cc
+    ${MAIN_TEST_DIR}/textureTests.cc
+    ${MAIN_TEST_DIR}/materialTests.cc
+    ${MAIN_TEST_DIR}/sceneloaderTests.cc
 )
-source_group(coreTests FILES ${PINKYCORE_TESTS_SRCS})
+source_group(mainTests FILES ${MAIN_TESTS_SRCS})
 
-# App
-set(PINKYAPP_TEST_DIR appTests)
-set(PINKYAPP_TESTS_SRCS 
-    ${PINKYAPP_TEST_DIR}/sceneloaderTests.cc
-)
-source_group(appTests FILES ${PINKYAPP_TESTS_SRCS})
-
-set(THIRDPARTY_DOCTEST_DIR ${PINKYPI_THIRDPARTY_DIR}/doctest)
+# lib
+set(THIRDPARTY_DOCTEST_DIR ${SPCTRNTS_THIRDPARTY_DIR}/doctest)
 set(THIRDPARTY_DOCTEST_SRCS
     ${THIRDPARTY_DOCTEST_DIR}/doctest.h
 )
@@ -57,26 +47,24 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 set (PLATFORM_DEPEND_LIBS winmm.lib)
 endif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-add_executable(PinkyPiTests
+add_executable(SpectrenotesTests
     testmain.cc
     testsupport.cc
     testsupport.h
     testconfig.h
     ${THIRDPARTY_DOCTEST_SRCS}
     ${LINEARALGEBRA_TESTS_SRCS}
-    ${PINKYCORE_TESTS_SRCS}
-    ${PINKYAPP_TESTS_SRCS}
+    ${MAIN_TESTS_SRCS}
 )
-target_link_libraries(PinkyPiTests PRIVATE
+target_link_libraries(SpectrenotesTests PRIVATE
     LinearAlgebra
-    PinkyCore
-    PinkyPiApp
+    SpectrenotesCore
     ThirdpartyLibs
     ${PLATFORM_DEPEND_LIBS}
 )
-target_include_directories(PinkyPiTests PRIVATE
-    ${PINKYPI_SOURCE_DIR}
-    ${PINKYPI_THIRDPARTY_DIR}
+target_include_directories(SpectrenotesTests PRIVATE
+    ${SPCTRNTS_SOURCE_DIR}
+    ${SPCTRNTS_THIRDPARTY_DIR}
     ${THIRDPARTY_DOCTEST_DIR}
 )
 
