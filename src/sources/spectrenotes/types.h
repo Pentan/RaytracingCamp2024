@@ -37,6 +37,10 @@ namespace Spectrenotes {
     // color
     typedef double RTColorType;
     typedef linearalgebra::Vector3<RTColorType> Color;
+    typedef linearalgebra::Vector3<RTColorType> XYZColor;
+
+    // spectrum
+    typedef double RTSpectrumType;
     
     // time
     typedef double RTTimeType;
