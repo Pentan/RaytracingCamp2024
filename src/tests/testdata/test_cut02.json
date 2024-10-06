@@ -1,0 +1,130 @@
+{
+    "last_frame": 5,
+    "bank":[
+        {"name":"1", "source":"image_overlay1"},
+        {"name":"2", "source":"image_overlay2"},
+        {"name":"3", "source":"image_overlay3"},
+        {"name":"4", "source":"image_overlay4"},
+        {"name":"5", "source":"image_top1"},
+        {"name":"6", "source":"image_top2"},
+        {"name":"7", "source":"image_top3"},
+        {"name":"8", "source":"image_bottom1"},
+        {"name":"9", "source":"image_bottom2"},
+        {"name":"10","source":"image_bg", "size":"480:270"},
+        {"name":"11","source":"image_mask1"},
+        {"name":"12","source":"image_mask2"},
+        {"name":"13","source":"image_mask3"},
+        {"name":"14","source":"image_mask4"}
+    ],
+    "timesheet":{
+        "A": ["1", "1", "1", "2", "2", "3", "3", "3", "4", "4"],
+        "B": ["5", "5", "5", "6", "6", "6", "6", "7", "7", "7"],
+        "C": ["8", "8", "8", "8", "8", "9", "9", "9", "9", "9"],
+        "D": ["10"],
+        "T": ["11", "11", "11", "12", "12", "13", "13", "13", "14", "14"]
+    },
+    "animation": {
+        "aA":[
+            {"frame": 1, "x": 0.0, "y": 0.0},
+            {"frame": 10, "x": 0.0, "y": 0.2}
+        ],
+        "aB":[
+            {"frame": 1, "x": 0.0, "y": 0.0, "ease_out":"smooth"},
+            {"frame": 10, "x": 0.5, "y": 0.0, "ease_in":"smooth"}
+        ],
+        "aC":[
+            {"frame": 1, "x": 0.0, "y": 0.0},
+            {"frame": 6, "x": 0.3, "y": 0.0},
+            {"frame": 10, "x": 0.3, "y": 0.0}
+        ],
+        "aVh":[
+            {"frame": 5, "zoom": 0.0},
+            {"frame": 10, "zoom": 0.1}
+        ],
+        "aVf":[
+            {"frame": 2, "focus": "top", "ease_out":"smooth"},
+            {"frame": 5, "focus": "base", "ease_in":"linear"}
+        ]
+    },
+    "plane_setup":[
+        {
+            "name":"top_plane",
+            "plates":[
+                {"item": "A", "animation":"aA"}
+            ]
+        },
+        {
+            "name":"mask_plane",
+            "plates":[
+                {"item": "T", "animation":"aA"}
+            ]
+        },
+        {
+            "name":"base_plane",
+            "plates":[
+                {"item": "B", "animation":"aB"},
+                {"item": "C", "animation":"aC"},
+                {"item": "D"}
+            ]
+        }
+    ],
+    "shot":[
+        {
+            "camera":{
+                "height": 2.0,
+                "exposure": 1.0,
+                "F": 2.0,
+                "focus": "top",
+                "animation": ["aVh", "aVf"],
+                "render":{
+                    "mode": "rgb",
+                    "sample_count": "4",
+                    "sample_strategy": "stratified:3:3"
+                }
+            },
+            "stand": {
+                "lights": {
+                    "top": {
+                        "enable": true,
+                        "power": 1.0
+                    }
+                },
+                "planes":[
+                    {"id": "top", "item": "top_plane", "height": 0.4},
+                    {"id": "base", "item": "base_plane"}
+                ]
+            }
+        },
+        {
+            "camera":{
+                "height": 2.0,
+                "exposure": 1.0,
+                "F": 2.0,
+                "filter":[
+                    {"type": "soft", "value": 1.0}
+                ],
+                "focus": "top",
+                "focus_shift": 0.02,
+                "render":{
+                    "mode": "spectrum",
+                    "sample_count": "16",
+                    "sample_strategy": "sobol"
+                }
+            },
+            "stand": {
+                "lights": {
+                    "top": {
+                        "enable": false
+                    },
+                    "back": {
+                        "enable": true,
+                        "power": 2.0
+                    }
+                },
+                "planes":[
+                    {"id": "base"}
+                ]
+            }
+        }
+    ]
+}

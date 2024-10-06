@@ -1251,7 +1251,7 @@ namespace {
     }
 }
 
-AssetLibrary* SceneLoader::load(std::string filepath) {
+AssetLibrary* SceneLoader::loadGLTF(std::string filepath) {
     tinygltf::TinyGLTF gltfloader;
     
     tinygltf::Model model;

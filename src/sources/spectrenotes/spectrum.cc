@@ -536,6 +536,7 @@ void SpectrumSample::addSample(RTFloat wavelength, RTFloat sample) {
 }
 
 XYZColor SpectrumSample::toXYZ() const {
-
+	// FIXME
+	return XYZColor();
 }
 

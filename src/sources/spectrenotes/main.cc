@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     Spectrenotes::Scene *scene = nullptr;
     
     if(config.inputFile.length() > 0) {
-        assetlib = Spectrenotes::SceneLoader::load(config.inputFile);
+        assetlib = Spectrenotes::SceneLoader::loadGLTF(config.inputFile);
         scene = assetlib->getDefaultScene();
     } else {
 //        scene = Spectrenotes::Scene::buildDefaultScene();

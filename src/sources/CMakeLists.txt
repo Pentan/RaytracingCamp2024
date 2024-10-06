@@ -39,7 +39,8 @@ list(APPEND SPCTRNTS_CORE_SRCS
     ${SPCTRNTS_MAIN_DIR}/keyframesampler.cc
     ${SPCTRNTS_MAIN_DIR}/skin.cc
     ${SPCTRNTS_MAIN_DIR}/tracablestructure.cc
-    ${SPCTRNTS_MAIN_DIR}/sceneloader.cc
+    ${SPCTRNTS_MAIN_DIR}/sceneloader_gltf.cc
+    ${SPCTRNTS_MAIN_DIR}/sceneloader_animstand.cc
     ${SPCTRNTS_MAIN_DIR}/spectrum.cc
 )
 list(APPEND SPCTRNTS_CORE_SRCS
