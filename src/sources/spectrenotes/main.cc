@@ -7,6 +7,7 @@
 #include <spectrenotes/renderer.h>
 #include <spectrenotes/config.h>
 #include <spectrenotes/postprocessor.h>
+#include <spectrenotes/animstand.h>
 
 #include "sceneloader.h"
 
@@ -27,6 +28,7 @@ int main(int argc, char* argv[])
     
     // check output dir?
     
+#if 0
     Spectrenotes::AssetLibrary *assetlib = nullptr;
     Spectrenotes::Scene *scene = nullptr;
     
@@ -48,6 +50,18 @@ int main(int argc, char* argv[])
     renderer.render();
     
     delete scene;
-    
+#else
+    Spectrenotes::AnimationStand* animstand = nullptr;
+
+    if (config.inputFile.length() > 0) {
+        animstand = Spectrenotes::SceneLoader::loadAnimStand(config.inputFile);
+    }
+
+    if (animstand) {
+        animstand->render();
+        delete animstand;
+    }
+
+#endif
     return 0;
 }

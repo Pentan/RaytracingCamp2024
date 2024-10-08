@@ -9,7 +9,8 @@
             "width": 1920,
             "height":1080,
             "fps":24,
-            "film_size": 35,
+            "film_size": "35mm",
+            "frame_size": {"width":254.0, "height":142.875},
             "directory": "output",
             "base_name": "frame_"
         }
@@ -20,20 +21,20 @@
             "cut": {
                 "last_frame": 10,
                 "bank":[
-                    {"name":"1", "source":"image_overlay1"},
-                    {"name":"2", "source":"image_overlay2"},
-                    {"name":"3", "source":"image_overlay3"},
-                    {"name":"4", "source":"image_overlay4"},
-                    {"name":"5", "source":"image_top1"},
-                    {"name":"6", "source":"image_top2"},
-                    {"name":"7", "source":"image_top3"},
-                    {"name":"8", "source":"image_bottom1"},
-                    {"name":"9", "source":"image_bottom2"},
-                    {"name":"10","source":"image_bg", "size":"480:270"},
-                    {"name":"11","source":"image_mask1"},
-                    {"name":"12","source":"image_mask2"},
-                    {"name":"13","source":"image_mask3"},
-                    {"name":"14","source":"image_mask4"}
+                    {"name":"1", "source":"images/image01.tga"},
+                    {"name":"2", "source":"images/image02.tga"},
+                    {"name":"3", "source":"images/image03.tga"},
+                    {"name":"4", "source":"images/image04.tga"},
+                    {"name":"5", "source":"images/image05.tga"},
+                    {"name":"6", "source":"images/image06.tga"},
+                    {"name":"7", "source":"images/image07.tga"},
+                    {"name":"8", "source":"images/image08.tga"},
+                    {"name":"9", "source":"images/image09.tga"},
+                    {"name":"10","source":"images/image10.tga", "size":"480:270"},
+                    {"name":"11","source":"images/image01.tga"},
+                    {"name":"12","source":"images/image04.tga"},
+                    {"name":"13","source":"images/image08.tga"},
+                    {"name":"14","source":"images/image10.tga"}
                 ],
                 "timesheet":{
                     "A": ["1", "1", "1", "2", "2", "3", "3", "3", "4", "4"],
@@ -93,12 +94,13 @@
                             "height": 2.0,
                             "exposure": 1.0,
                             "F": 2.0,
+                            "focal_length": 100.0,
                             "focus": "top",
                             "animation": ["aVh", "aVf"],
                             "render":{
                                 "mode": "rgb",
-                                "sample_count": "4",
-                                "sample_strategy": "stratified:3:3"
+                                "sample_count": 4,
+                                "sample_strategy": "stratify:3:3"
                             }
                         },
                         "stand": {
@@ -119,15 +121,16 @@
                             "height": 2.0,
                             "exposure": 1.0,
                             "F": 2.0,
+                            "focal_length": 100.0,
                             "filter":[
-                                {"type": "soft", "value": 1.0}
+                                {"type": "soft", "roughness": 0.1}
                             ],
                             "focus": "top",
                             "focus_shift": 0.02,
                             "animation": ["aVh", "aVf"],
                             "render":{
                                 "mode": "spectrum",
-                                "sample_count": "16",
+                                "sample_count": 16,
                                 "sample_strategy": "sobol"
                             }
                         },

@@ -42,6 +42,7 @@ list(APPEND SPCTRNTS_CORE_SRCS
     ${SPCTRNTS_MAIN_DIR}/sceneloader_gltf.cc
     ${SPCTRNTS_MAIN_DIR}/sceneloader_animstand.cc
     ${SPCTRNTS_MAIN_DIR}/spectrum.cc
+    ${SPCTRNTS_MAIN_DIR}/animstand.cc
 )
 list(APPEND SPCTRNTS_CORE_SRCS
     ${SPCTRNTS_MAIN_DIR}/types.h
@@ -69,6 +70,7 @@ list(APPEND SPCTRNTS_CORE_SRCS
     ${SPCTRNTS_MAIN_DIR}/intersection.h
     ${SPCTRNTS_MAIN_DIR}/sceneloader.h
     ${SPCTRNTS_MAIN_DIR}/spectrum.h
+    ${SPCTRNTS_MAIN_DIR}/animstand.h
 )
 
 add_library(SpectrenotesCore ${SPCTRNTS_CORE_SRCS})

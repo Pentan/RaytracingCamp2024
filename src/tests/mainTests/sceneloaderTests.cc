@@ -9,6 +9,7 @@
 #include <spectrenotes/scene.h>
 #include <spectrenotes/bvh.h>
 #include <spectrenotes/sceneloader.h>
+#include <spectrenotes/animstand.h>
 
 using namespace Spectrenotes;
 
@@ -60,6 +61,11 @@ TEST_CASE("Cell stage scene test 01 [SceneLoader] [AnimStand]") {
     ss << SPCTRNTS_TEST_DATA_DIR << "/" << "test_scene01.json";
     std::string path = ss.str();
 
-    AssetLibrary* assetlib = SceneLoader::loadAnimStand(path);
-    REQUIRE(assetlib != nullptr);
+    AnimationStand* animstand = SceneLoader::loadAnimStand(path);
+    REQUIRE(animstand != nullptr);
+
+    animstand->outconf.directory = SPCTRNTS_TEST_OUTPUT_DIR;
+    animstand->render();
+
+    // delete animstand;
 }

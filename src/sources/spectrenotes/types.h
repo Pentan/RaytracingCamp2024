@@ -36,8 +36,9 @@ namespace Spectrenotes {
 
     // color
     typedef double RTColorType;
-    typedef linearalgebra::Vector3<RTColorType> Color;
+    typedef linearalgebra::Vector3<RTColorType> RGBColor;
     typedef linearalgebra::Vector3<RTColorType> XYZColor;
+    typedef RGBColor Color; // for compatibirily
 
     // spectrum
     typedef double RTSpectrumType;

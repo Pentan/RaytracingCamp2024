@@ -118,15 +118,16 @@ TEST_CASE("ImageTexture test [Texture]") {
 
 TEST_CASE("ImageTexture load test [Texture]") {
     std::stringstream ss;
-    ss << SPCTRNTS_TEST_DATA_DIR << "/" << "normaltest0.png";
+    //ss << SPCTRNTS_TEST_DATA_DIR << "/" << "normaltest0.png";
+    ss << SPCTRNTS_TEST_DATA_DIR << "/" << "images/image01.tga";
     std::string path = ss.str();
     
     int x, y, c;
-    auto* data = stbi_load(path.c_str(), &x, &y, &c, 4);
+    auto* data = stbi_load(path.c_str(), &x, &y, &c, 0);
     REQUIRE(data != nullptr);
 
     ImageTexture tex(x, y);
-    tex.initWith8BPPImage(data, c, 1.0);
+    tex.initWith8BPPImage(data, c, 2.2);
     
     SaveImage("loadtest", &tex);
     

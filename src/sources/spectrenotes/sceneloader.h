@@ -6,12 +6,13 @@
 namespace Spectrenotes {
     
     class AssetLibrary;
+    class AnimationStand;
     
     class SceneLoader {
     public:
         // these methods are thread unsafe
         static AssetLibrary* loadGLTF(std::string filepath);
-        static AssetLibrary* loadAnimStand(std::string filepath);
+        static AnimationStand* loadAnimStand(std::string filepath);
     };
 }
 

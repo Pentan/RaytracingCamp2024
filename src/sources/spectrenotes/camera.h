@@ -14,7 +14,8 @@ namespace Spectrenotes {
     public:
         enum CameraType {
             kPerspectiveCamera,
-            kOrthographicsCamera
+            kOrthographicsCamera,
+            kFocusPlanePerspectiveCamera,
         };
         
     public:
@@ -29,6 +30,7 @@ namespace Spectrenotes {
         static Ray getThinLensRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
         static Ray getPerspectiveRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
         static Ray getOrthoRay(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
+        static Ray getThinLensRayFromFocusPlane(Camera* cam, RTFloat tx, RTFloat ty, Random* rng);
 
         Ray(*getRayFunc)(Camera*, RTFloat, RTFloat, Random*);
 
@@ -52,9 +54,13 @@ namespace Spectrenotes {
             } orthographics;
         };
 
-        // RTFloat focalLength;    // [mm]
+        RTFloat sensorWidth;    // [mm]
+        RTFloat sensorHeight;   // [mm]
+        RTFloat focalLength;    // [mm]
         RTFloat fNumber;        // [focal length / diameter of entrance pupil]
         RTFloat focusDistance;  // [m]
+        RTFloat focusPlaneWidth;  // [m]
+        RTFloat focusPlaneHeight; // [m]
     };
 }
 

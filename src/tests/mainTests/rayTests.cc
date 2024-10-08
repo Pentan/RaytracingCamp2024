@@ -7,6 +7,8 @@
 #include <spectrenotes/aabb.h>
 #include <spectrenotes/mesh.h>
 #include <spectrenotes/bvh.h>
+#include <spectrenotes/camera.h>
+#include <spectrenotes/random.h>
 
 using namespace Spectrenotes;
 
@@ -59,4 +61,40 @@ TEST_CASE("Ray triangle test [Ray]") {
     REQUIRE(!h);
     REQUIRE_EQ(bb, doctest::Approx(0.0));
     REQUIRE_EQ(bc, doctest::Approx(1.0));
+}
+
+TEST_CASE("Ray generate test [Ray] [Camera]") {
+    Camera camera;
+
+    camera.sensorWidth = 24.0;
+    camera.sensorHeight = 18.0;
+    camera.fNumber = 4.0;
+    camera.focalLength = 100.0;
+    camera.focusDistance = 1.0;
+    camera.focusPlaneWidth = 0.24;
+    camera.focusPlaneHeight = 0.18;
+    camera.initWithType(Camera::CameraType::kFocusPlanePerspectiveCamera);
+
+    Random rng;
+    Ray ray;
+
+    ray = camera.getRay(0.0, 0.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+
+    ray = camera.getRay(-1.0, 0.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+    ray = camera.getRay(0.0, -1.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+
+    ray = camera.getRay(1.0, 0.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+    ray = camera.getRay(0.0, 1.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+
+    ray = camera.getRay(-1.0, -1.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+    ray = camera.getRay(1.0, 1.0, &rng);
+    ray.direction = ray.direction / ray.direction.z;
+    REQUIRE_EQ(ray.direction.x + ray.origin.x, doctest::Approx(camera.focusPlaneWidth * -0.5));
+    REQUIRE_EQ(ray.direction.y + ray.origin.y, doctest::Approx(camera.focusPlaneHeight * -0.5));
 }
