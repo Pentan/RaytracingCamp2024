@@ -13,9 +13,9 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout << "===== Spectrenotes =====\n" << std::endl;
+    std::cout << "===== Petals =====" << std::endl;
     
-    std::string configPath = "data/config.json";
+    std::string configPath = "etc/config.json";
     Spectrenotes::Config config;
     if(!config.load(configPath)) {
         std::cerr << "config load failed. use default settings." << std::endl;
@@ -23,12 +23,11 @@ int main(int argc, char* argv[])
     if(argc > 1) {
         config.parseOptions(argc, argv);
     }
-    
-    config.print();
-    
-    // check output dir?
-    
+
 #if 0
+    config.print();
+    // check output dir?
+
     Spectrenotes::AssetLibrary *assetlib = nullptr;
     Spectrenotes::Scene *scene = nullptr;
     
@@ -54,11 +53,22 @@ int main(int argc, char* argv[])
     Spectrenotes::AnimationStand* animstand = nullptr;
 
     if (config.inputFile.length() > 0) {
+        std::cout << "input file: " << config.inputFile << std::endl;
         animstand = Spectrenotes::SceneLoader::loadAnimStand(config.inputFile);
+        std::cout << " loaded!" << std::endl;
+    }
+    else {
+        std::cout << "no input file. use -i option or edit config file." << std::endl;
     }
 
     if (animstand) {
+        // config
+        animstand->maxThreads = config.maxThreads;
+        animstand->limitSec = config.limitSec;
+
+        std::cout << "start rendering" << std::endl;
         animstand->render();
+        std::cout << "done" << std::endl;
         delete animstand;
     }
 

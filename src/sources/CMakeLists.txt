@@ -87,16 +87,16 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 set (PLATFORM_DEPEND_LIBS winmm.lib)
 endif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-add_executable(Spectrenotes
+add_executable(Petals
     ${SPCTRNTS_MAIN_DIR}/main.cc
 )
-target_link_libraries(Spectrenotes PUBLIC
+target_link_libraries(Petals PUBLIC
     SpectrenotesCore
     LinearAlgebra
     ThirdpartyLibs
     ${PLATFORM_DEPEND_LIBS}
 )
-target_include_directories(Spectrenotes PRIVATE
+target_include_directories(Petals PRIVATE
     ${SPCTRNTS_SOURCE_DIR}
     ${SPCTRNTS_THIRDPARTY_DIR}
     ${SPCTRNTS_MAIN_DIR}

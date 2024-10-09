@@ -237,22 +237,32 @@ namespace {
             if (standjson.contains("lights")) {
                 const auto& lights = standjson["lights"];
                 for (int i = 0; i < 2; i++) {
-                    const nlohmann::json* litjson;
+                    const nlohmann::json* plitjson;
                     CameraStand::LightSetting* standlit;
                     if (i == 0) {
                         if (!lights.contains("top")) continue;
-                        litjson = &lights["top"];
+                        plitjson = &lights["top"];
                         standlit = &stand.toplight;
                     }
                     else {
                         if (!lights.contains("back")) continue;
-                        litjson = &lights["back"];
+                        plitjson = &lights["back"];
                         standlit = &stand.backlight;
                     }
 
-                    standlit->enable = GetContaintValue<bool>(*litjson, "enable", false);
-                    standlit->power = GetContaintValue<RTFloat>(*litjson, "power", 0.0);
-                    standlit->color.set(1.0, 1.0, 1.0); // TODO
+                    const auto& litjson = *plitjson;
+                    standlit->enable = GetContaintValue<bool>(litjson, "enable", false);
+                    standlit->power = GetContaintValue<RTFloat>(litjson, "power", 0.0);
+                    if (litjson.contains("color")) {
+                        const auto& coljson = litjson["color"];
+                        if (!coljson.is_object()) {
+                            std::cerr << "color require {\"r\":R, \"g\":G, \"b\":B}" << std::endl;
+                            return false;
+                        }
+                        standlit->color.r = GetContaintValue<RTFloat>(coljson, "r", 1.0);
+                        standlit->color.g = GetContaintValue<RTFloat>(coljson, "g", 1.0);
+                        standlit->color.b = GetContaintValue<RTFloat>(coljson, "b", 1.0);
+                    }
                 }
             }
 

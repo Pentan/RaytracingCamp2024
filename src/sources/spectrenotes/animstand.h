@@ -6,6 +6,9 @@
 #include <vector>
 #include <map>
 #include <filesystem>
+#include <thread>
+#include <mutex>
+#include <queue>
 
 #include "types.h"
 #include "random.h"
@@ -195,6 +198,17 @@ namespace Spectrenotes {
 
         bool render();
 
+
+    public:
+        VersionInfo version;
+        OutputConfig outconf;
+
+        std::vector<std::string> sequence;
+        std::map<std::string, std::shared_ptr<Cut>> cutList;
+
+        int maxThreads;
+        RTFloat limitSec;
+
     private:
         struct RenderContexts {
             std::shared_ptr<Cut> cutptr;
@@ -204,13 +218,17 @@ namespace Spectrenotes {
         };
         bool renderOneFrame(RenderContexts& cntx);
 
-    public:
-        VersionInfo version;
-        OutputConfig outconf;
+        struct RenderInfo {
+            std::string cutName;
+            int cutFrameIndex;
+            int serialFrameIndex;
+        };
+        std::vector<std::thread> workerPool;
+        std::queue<RenderInfo> renderJobQueue;
+        std::mutex renderJobQueueMutex;
+        std::atomic<int> workingCount;
 
         std::vector<RenderContexts> renderCntx;
-        std::vector<std::string> sequence;
-        std::map<std::string, std::shared_ptr<Cut>> cutList;
     };
 
 }

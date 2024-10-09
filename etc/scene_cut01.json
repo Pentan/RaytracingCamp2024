@@ -1,0 +1,60 @@
+{
+    "last_frame": 72,
+    "bank":[
+        {"name":"11", "source":"images/cc/0001.tga"},
+        {"name":"12", "source":"images/cc/0002.tga"},
+        {"name":"13", "source":"images/cc/0003.tga"},
+        {"name":"21", "source":"images/cc/0004.tga"},
+        {"name":"22", "source":"images/cc/0005.tga"},
+        {"name":"23", "source":"images/cc/0006.tga"},
+        {"name":"31", "source":"images/cc/0007.tga"},
+        {"name":"32", "source":"images/cc/0008.tga"},
+        {"name":"33", "source":"images/cc/0009.tga"},
+        {"name":"B1", "source":"images/bg/bg_0002.tga "}
+    ],
+    "timesheet":{
+        "C1": [
+            "11", "11", "11", "12", "12", "12", "13", "13", "13", "11", "11", "11", "12", "12", "12", "13", "13", "13", "11", "11", "11", "12", "12", "12", "13", "13", "13",
+            "21", "21", "21", "22", "22", "22", "23", "23", "23", "21", "21", "21", "22", "22", "22", "23", "23", "23", "21", "21", "21", "22", "22", "22", "23", "23", "23",
+            "31", "31", "31", "32", "32", "32", "33", "33", "33", "31", "31", "31", "32", "32", "32", "33", "33", "33", "31", "31", "31", "32", "32", "32", "33", "33", "33"
+        ],
+        "B1": ["B1"]
+    },
+    "animation": {},
+    "plane_setup":[
+        {
+            "name":"base_plane",
+            "plates":[
+                {"item": "C1"},
+                {"item": "B1"}
+            ]
+        }
+    ],
+    "shot":[
+        {
+            "camera":{
+                "height": 2.0,
+                "exposure": 1.0,
+                "F": 2.0,
+                "focal_length": 100.0,
+                "focus": "base",
+                "render":{
+                    "mode": "rgb",
+                    "sample_count": 2,
+                    "sample_strategy": "stratify:2:2"
+                }
+            },
+            "stand": {
+                "lights": {
+                    "top": {
+                        "enable": true,
+                        "power": 1.0
+                    }
+                },
+                "planes":[
+                    {"id": "base", "item": "base_plane"}
+                ]
+            }
+        }
+    ]
+}

@@ -3,6 +3,8 @@
 #include <fstream>
 #include <filesystem>
 #include <random>
+#include <chrono>
+#include <cmath>
 
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
@@ -65,14 +67,16 @@ bool Cel::loadFile(const std::string srcpath, const std::filesystem::path curdir
     texptr->initWith8BPPImage(imgbuf, c, 2.2);
     stbi_image_free(imgbuf);
 
+    // TODO
+    texptr->setWrap(ImageTexture::WrapType::kClamp, ImageTexture::WrapType::kClamp);
+
     return true;
 }
 
 //================
+//#define SPECTRENOTES_WORK_SERIAL
+
 bool AnimationStand::render() {
-    //+++++
-    // setup job worker
-    //+++++
     std::random_device rnd_dev;
     std::mt19937 mt(rnd_dev());
 
@@ -82,27 +86,89 @@ bool AnimationStand::render() {
         const auto* cut = cutptr.get();
 
         for (int ifrm = 0; ifrm < cut->lastFrame; ifrm++) {
+#ifdef SPECTRENOTES_WORK_SERIAL
+            // serial job
             RenderContexts cntx;
             cntx.cutptr = cutptr;
             cntx.cutFrameIndex = ifrm;
             cntx.serialFrameIndex = currentFrame;
             cntx.rng.setSeed(mt());
 
-#if 1
-            // serial job
+            std::cout << " start [" << cutname << "][" << ifrm << "] : " << currentFrame << std::endl;
             renderOneFrame(cntx);
 #else
             // parallel job setup
+            auto& rndrinfo = renderJobQueue.emplace();
+            rndrinfo.cutName = cutname;
+            rndrinfo.cutFrameIndex = ifrm;
+            rndrinfo.serialFrameIndex = currentFrame;
 #endif
 
             currentFrame += 1;
-            break; //+++++
         }
     }
 
-    //+++++
+#ifndef SPECTRENOTES_WORK_SERIAL
+    // worker setup
+    {
+        int hwThreads = std::thread::hardware_concurrency();
+        std::cout << "hardware_concurrency: " << hwThreads << std::endl;
+        maxThreads = (maxThreads <= 0) ? hwThreads : maxThreads;
+        std::cout << "maxThreads: " << maxThreads << std::endl;
+    }
+    
+    workingCount = maxThreads;
+    renderCntx.resize(maxThreads);
+    workerPool.reserve(maxThreads);
+    for (int i = 0; i < maxThreads; i++) {
+        // init context
+        auto& cntx = renderCntx[i];
+        cntx.rng.setSeed(mt());
+        // thread job
+        auto& thrd = workerPool.emplace_back([&] {
+            RenderInfo rndrinfo;
+            while(true) {
+                {
+                    std::lock_guard<std::mutex> lock(renderJobQueueMutex);
+                    if (renderJobQueue.empty()) {
+                        break;
+                    }
+                    rndrinfo = renderJobQueue.front();
+                    renderJobQueue.pop();
+                }
+
+                cntx.cutFrameIndex = rndrinfo.cutFrameIndex;
+                cntx.serialFrameIndex = rndrinfo.serialFrameIndex;
+                cntx.cutptr = this->cutList[rndrinfo.cutName];
+                this->renderOneFrame(cntx);
+            }
+            workingCount -= 1;
+        });
+    }
+
     // wait to finish jobs
-    //+++++
+    std::cout << "time limit:" << limitSec << " [sec]" << std::endl;
+    // FIXME
+    constexpr int kWaitMilliSec = 1000;
+    constexpr int kLogCount = 5;
+    int loopCount = 0;
+    while (workingCount > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitMilliSec));
+        if (loopCount % kLogCount == 0) {
+            std::cout << "working: " << workingCount << std::endl;
+        }
+        loopCount += 1;
+        if (limitSec > 0.0) {
+            if (loopCount * kWaitMilliSec / 1000.0 >= limitSec) {
+                break;
+            }
+        }
+    }
+    // cleanup
+    for (auto& thrd : workerPool) {
+        thrd.join();
+    }
+#endif
 
     return true;
 }
@@ -155,10 +221,8 @@ bool AnimationStand::renderOneFrame(RenderContexts& cntx) {
                     camera.focusDistance -= target->height;
                 }
             }
-
             camera.focusDistance += shotcam.focusShift;
         }
-
 
         // stand layout
         {
@@ -215,8 +279,20 @@ bool AnimationStand::renderOneFrame(RenderContexts& cntx) {
         // render shot
         {
             auto& rng = cntx.rng;
-            const auto& rndconf = shot->camera.render;
+            const auto& shotcam = shot->camera;
+            const auto& rndconf = shotcam.render;
             tmpfb.clear();
+
+            RGBColor topLitColor(0.0, 0.0, 0.0);
+            if (shot->stand.toplight.enable) {
+                topLitColor = shot->stand.toplight.color * shot->stand.toplight.power;
+            }
+
+            RGBColor backLitColor(0.0, 0.0, 0.0);
+            if (shot->stand.backlight.enable) {
+                backLitColor = shot->stand.backlight.color * shot->stand.backlight.power;
+            }
+
             for (int iy = 0; iy < fbh; iy++) {
                 for (int ix = 0; ix < fbw; ix++) {
                     //RTFloat tx = static_cast<RTFloat>(ix) / fbw;
@@ -231,37 +307,54 @@ bool AnimationStand::renderOneFrame(RenderContexts& cntx) {
                     }
                     //+++++
 
-                    for (int ssy = 0; ssy < ssrow; ssy++) {
-                        for (int ssx = 0; ssx < sscol; ssx++) {
-                            RTFloat stx = (ssx + rng.nextDoubleCO()) / sscol;
-                            RTFloat sty = (ssy + rng.nextDoubleCO()) / ssrow;
+                    for(int isp = 0; isp < rndconf.sampleCount; isp++) {
+                        for (int ssy = 0; ssy < ssrow; ssy++) {
+                            for (int ssx = 0; ssx < sscol; ssx++) {
+                                RTFloat stx = (ssx + rng.nextDoubleCO()) / sscol;
+                                RTFloat sty = (ssy + rng.nextDoubleCO()) / ssrow;
 
-                            RTFloat sx = (ix + stx) / fbw * 2.0 - 1.0;
-                            RTFloat sy = (iy + sty) / fbh * 2.0 - 1.0;
+                                // image origin is left top, world y up is positive
+                                RTFloat sx = (ix + stx) / fbw * 2.0 - 1.0;
+                                RTFloat sy = (iy + sty) / fbh * -2.0 + 1.0;
 
-                            // camera is (0,0,0)
-                            Ray ray = camera.getRay(sx, sy, &rng);
+                                // camera is (0,0,0)
+                                Ray ray = camera.getRay(sx, sy, &rng);
 
-                            RGBColor tmpcolor(0.0, 0.0, 0.0);
-                            RTFloat alpha = 1.0;
-                            for (const auto& lypln : standLayout.planes) {
-                                RTFloat t = lypln.offset.z / ray.direction.z;
-                                Vector3 hit = ray.direction * t + ray.origin;
-                                const auto* celobj = lypln.celptr.get();
+                                // TODO
+                                // filter
+                                //for(const auto& fltr : shotcam.filters)
+                                //{
+                                //    switch (fltr.type) {
+                                //        case AnimCamera::FilterType::kSoft:
+                                //            break;
+                                //        case AnimCamera::FilterType::kCross:
+                                //            break;
+                                //        default:
+                                //    }
+                                //}
 
-                                RTFloat u = hit.x / (celobj->width * 0.001) + 0.5;
-                                RTFloat v = hit.y / (celobj->height * 0.001) + 0.5;
+                                RGBColor tmpcolor(0.0, 0.0, 0.0);
+                                RTFloat alpha = 1.0;
+                                for (const auto& lypln : standLayout.planes) {
+                                    RTFloat t = lypln.offset.z / ray.direction.z;
+                                    Vector3 hit = ray.direction * t + ray.origin;
+                                    const auto* celobj = lypln.celptr.get();
 
-                                const auto* celtex = celobj->texptr.get();
-                                auto texel = celtex->sample(u, v, true);
-                                tmpcolor = tmpcolor + texel.rgb * texel.a * alpha;
-                                alpha *= 1.0 - texel.a;
-                                if (alpha <= 0.0) break;
+                                    RTFloat u = hit.x / (celobj->width * 0.001) + 0.5;
+                                    RTFloat v = hit.y / (celobj->height * 0.001) + 0.5;
+
+                                    const auto* celtex = celobj->texptr.get();
+                                    auto texel = celtex->sample(u, v, true);
+                                    tmpcolor = tmpcolor + texel.rgb * texel.a * alpha;
+                                    alpha *= 1.0 - texel.a;
+                                    if (alpha <= 0.0) break;
+                                }
+
+                                tmpcolor = RGBColor::mul(topLitColor, tmpcolor) + backLitColor * alpha;
+                                tmpfb.accumulate(ix, iy, tmpcolor);
                             }
-
-                            tmpfb.accumulate(ix, iy, tmpcolor);
-                        }
-                    } // ss
+                        } // ss
+                    } // sampleCount
                 }
             } // iy
         } //
@@ -269,26 +362,27 @@ bool AnimationStand::renderOneFrame(RenderContexts& cntx) {
         // 
         for (int iy = 0; iy < fbh; iy++) {
             for (int ix = 0; ix < fbw; ix++) {
-                auto tmpcolor = tmpfb.getColor(ix, iy);
+                // rendered image is 180 deg rotated
+                auto tmpcolor = tmpfb.getColor(fbw - ix - 1, fbh - iy - 1);
                 auto& pixel = framebuffer.getPixel(ix, iy);
-                pixel.accumulatedColor += tmpcolor;
+                pixel.accumulatedColor += tmpcolor * shot->camera.exposure;
                 pixel.sampleCount = 1;
             }
         }
 
-        //+++++
-        {
-            const auto* cel = cut->bank.at("1").get();
-            for (int iy = 0; iy < fbh; iy++) {
-                for (int ix = 0; ix < fbw; ix++) {
-                    RTFloat tx = static_cast<RTFloat>(ix) / fbw;
-                    RTFloat ty = static_cast<RTFloat>(iy) / fbh;
-                    auto tmpcolor = cel->texptr->sample(tx, ty, true);
-                    framebuffer.setColor(ix, iy, tmpcolor.rgb);
-                }
-            }
-        }
-        //+++++
+        ////+++++
+        //{
+        //    const auto* cel = cut->bank.at("1").get();
+        //    for (int iy = 0; iy < fbh; iy++) {
+        //        for (int ix = 0; ix < fbw; ix++) {
+        //            RTFloat tx = static_cast<RTFloat>(ix) / fbw;
+        //            RTFloat ty = static_cast<RTFloat>(iy) / fbh;
+        //            auto tmpcolor = cel->texptr->sample(tx, ty, true);
+        //            framebuffer.setColor(ix, iy, tmpcolor.rgb);
+        //        }
+        //    }
+        //}
+        ////+++++
 
     } // shot
 
@@ -305,5 +399,8 @@ bool AnimationStand::renderOneFrame(RenderContexts& cntx) {
 
     const auto savepath = ss.str();
     bool saveres = writeFrameBufferToFile(framebuffer, savepath);
+
+    std::cout << savepath << " saved: " << saveres << std::endl;
+
     return saveres;
 }
