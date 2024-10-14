@@ -41,7 +41,7 @@ src/tests/output
 src/tests/testdata/*
 !src/tests/testdata/_memo.txt
 !src/tests/testdata/config
-camp10/c5h12_cpu/*
-!camp10/c5h12_cpu/fps.txt
-!camp10/c5h12_cpu/run.ps1
+camp_ver/camp10/c5h12_cpu/*
+!camp_ver/camp10/c5h12_cpu/fps.txt
+!camp_ver/camp10/c5h12_cpu/run.ps1
 
