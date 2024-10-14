@@ -1,0 +1,5 @@
+{
+    "inputFile": "etc/scene_main.json",
+    "maxThreads": 192,
+    "limitSec": 256.0
+}
