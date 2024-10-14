@@ -2,9 +2,9 @@
 #include <cstdio>
 #include "testsupport.h"
 
-using namespace Spectrenotes;
+using namespace Petals;
 
-// #ifndef SPCTRNTS_NO_STD_FILESYSTEM
+// #ifndef PETALS_NO_STD_FILESYSTEM
 #include <filesystem>
 namespace {
 bool CheckExistsOrCreateDir(std::string dirpath) {
@@ -35,13 +35,13 @@ bool CheckExistsOrCreateDir(std::string dirpath) {
 // }
 // #endif
 
-void Spectrenotes::CheckTestOutputDir(std::string dirpath) {
-    if(!CheckExistsOrCreateDir(SPCTRNTS_TEST_OUTPUT_DIR)) {
+void Petals::CheckTestOutputDir(std::string dirpath) {
+    if(!CheckExistsOrCreateDir(PETALS_TEST_OUTPUT_DIR)) {
         return;
     }
     
     std::stringstream ss;
-    ss << SPCTRNTS_TEST_OUTPUT_DIR << "/" << dirpath;
+    ss << PETALS_TEST_OUTPUT_DIR << "/" << dirpath;
     std::string fullpath = ss.str();
     if(!CheckExistsOrCreateDir(fullpath)) {
         return;

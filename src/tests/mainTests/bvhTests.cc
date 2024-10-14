@@ -2,12 +2,12 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/bvh.h>
-#include <spectrenotes/ray.h>
-#include <spectrenotes/aabb.h>
+#include <petals/types.h>
+#include <petals/bvh.h>
+#include <petals/ray.h>
+#include <petals/aabb.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
 }

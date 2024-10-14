@@ -4,13 +4,13 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/config.h>
+#include <petals/types.h>
+#include <petals/config.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 TEST_CASE("Load test [Config]") {
-    std::string path(SPCTRNTS_TEST_DATA_DIR"/config/testconfig00.json");
+    std::string path(PETALS_TEST_DATA_DIR"/config/testconfig00.json");
     
     Config config;
     bool loaded = config.load(path);

@@ -1,11 +1,11 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/ray.h>
-#include <spectrenotes/aabb.h>
+#include <petals/types.h>
+#include <petals/ray.h>
+#include <petals/aabb.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
     bool IsHitRayAndAABB(const AABB& aabb, Vector3 o, Vector3 d, RTFloat n=1e-2, RTFloat f=1e8) {

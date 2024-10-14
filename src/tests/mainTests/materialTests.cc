@@ -5,12 +5,12 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/material.h>
-#include <spectrenotes/random.h>
-#include <spectrenotes/ray.h>
+#include <petals/types.h>
+#include <petals/material.h>
+#include <petals/random.h>
+#include <petals/ray.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
     void SaveVectorsAsObj(std::string filename, std::vector<Vector3>& vecs) {
@@ -18,7 +18,7 @@ namespace {
         CheckTestOutputDir(outdir);
         
         std::stringstream ss;
-        ss << SPCTRNTS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".obj";
+        ss << PETALS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".obj";
         std::string outpath = ss.str();
         
         std::fstream fs(outpath, std::ios_base::out);

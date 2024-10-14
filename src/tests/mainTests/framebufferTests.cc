@@ -4,12 +4,12 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/framebuffer.h>
+#include <petals/types.h>
+#include <petals/framebuffer.h>
 
 #include <stb/stb_image_write.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
     void OutputImage(std::string filename, int w, int h, unsigned char *data) {
@@ -17,7 +17,7 @@ namespace {
         CheckTestOutputDir(outdir);
         
         std::stringstream ss;
-        ss << SPCTRNTS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".png";
+        ss << PETALS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".png";
         std::string outpath = ss.str();
         
         int res = stbi_write_png(outpath.c_str(), w, h, 3, data, 0);

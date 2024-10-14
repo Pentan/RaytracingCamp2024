@@ -1,11 +1,11 @@
 # tests/CMakeLists.txt
 
 # Config
-set(TEST_OUTPUT_DIR "\"${SPCTRNTS_TEST_DIR}/output\"")
-set(TEST_DATA_DIR "\"${SPCTRNTS_TEST_DIR}/testdata\"")
+set(TEST_OUTPUT_DIR "\"${PETALS_TEST_DIR}/output\"")
+set(TEST_DATA_DIR "\"${PETALS_TEST_DIR}/testdata\"")
 configure_file(
-    "${SPCTRNTS_TEST_DIR}/testconfig.h.in"
-    "${SPCTRNTS_TEST_DIR}/testconfig.h"
+    "${PETALS_TEST_DIR}/testconfig.h.in"
+    "${PETALS_TEST_DIR}/testconfig.h"
 )
 
 # Linear Algebra
@@ -35,7 +35,7 @@ set(MAIN_TESTS_SRCS
 source_group(mainTests FILES ${MAIN_TESTS_SRCS})
 
 # lib
-set(THIRDPARTY_DOCTEST_DIR ${SPCTRNTS_THIRDPARTY_DIR}/doctest)
+set(THIRDPARTY_DOCTEST_DIR ${PETALS_THIRDPARTY_DIR}/doctest)
 set(THIRDPARTY_DOCTEST_SRCS
     ${THIRDPARTY_DOCTEST_DIR}/doctest.h
 )
@@ -47,7 +47,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 set (PLATFORM_DEPEND_LIBS winmm.lib)
 endif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-add_executable(SpectrenotesTests
+add_executable(PetalsTests
     testmain.cc
     testsupport.cc
     testsupport.h
@@ -56,15 +56,15 @@ add_executable(SpectrenotesTests
     ${LINEARALGEBRA_TESTS_SRCS}
     ${MAIN_TESTS_SRCS}
 )
-target_link_libraries(SpectrenotesTests PRIVATE
+target_link_libraries(PetalsTests PRIVATE
     LinearAlgebra
-    SpectrenotesCore
+    PetalsCore
     ThirdpartyLibs
     ${PLATFORM_DEPEND_LIBS}
 )
-target_include_directories(SpectrenotesTests PRIVATE
-    ${SPCTRNTS_SOURCE_DIR}
-    ${SPCTRNTS_THIRDPARTY_DIR}
+target_include_directories(PetalsTests PRIVATE
+    ${PETALS_SOURCE_DIR}
+    ${PETALS_THIRDPARTY_DIR}
     ${THIRDPARTY_DOCTEST_DIR}
 )
 

@@ -4,14 +4,14 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/animation.h>
-#include <spectrenotes/keyframesampler.h>
+#include <petals/types.h>
+#include <petals/animation.h>
+#include <petals/keyframesampler.h>
 
-//#include <spectrenotes/assetlibrary.h>
-//#include <spectrenotes/scene.h>
+//#include <petals/assetlibrary.h>
+//#include <petals/scene.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 TEST_CASE("KayframeSampler uniform key v3 Test [Animation]") {
     KeyframeSampler ks;

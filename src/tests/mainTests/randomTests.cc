@@ -5,16 +5,16 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/random.h>
+#include <petals/types.h>
+#include <petals/random.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 TEST_CASE("Random test [Random]") {
     bool writelog = true;
     
     std::stringstream ss;
-    ss << SPCTRNTS_TEST_OUTPUT_DIR << "/randomout.txt";
+    ss << PETALS_TEST_OUTPUT_DIR << "/randomout.txt";
     std::string outpath = ss.str();
     
     std::ofstream fs(outpath, std::ios::binary);

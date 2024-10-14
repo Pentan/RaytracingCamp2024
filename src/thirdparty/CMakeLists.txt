@@ -1,16 +1,16 @@
 # thirdparty settings
 set(THIRDPARTY_SRCS
-    ${SPCTRNTS_THIRDPARTY_DIR}/thirdparty.cc
+    ${PETALS_THIRDPARTY_DIR}/thirdparty.cc
 )
 set(THIRDPARTY_STB_SRCS
-    ${SPCTRNTS_THIRDPARTY_DIR}/stb/stb_image.h
-    ${SPCTRNTS_THIRDPARTY_DIR}/stb/stb_image_write.h
+    ${PETALS_THIRDPARTY_DIR}/stb/stb_image.h
+    ${PETALS_THIRDPARTY_DIR}/stb/stb_image_write.h
 )
 set(THIRDPARTY_JSON_SRCS
-    ${SPCTRNTS_THIRDPARTY_DIR}/nlohmann/json.hpp
+    ${PETALS_THIRDPARTY_DIR}/nlohmann/json.hpp
 )
 set(THIRDPARTY_TINYGLTF_SRCS
-    ${SPCTRNTS_THIRDPARTY_DIR}/tinygltf/tiny_gltf.h
+    ${PETALS_THIRDPARTY_DIR}/tinygltf/tiny_gltf.h
 )
 
 add_library(ThirdpartyLibs
@@ -21,7 +21,7 @@ add_library(ThirdpartyLibs
 )
 target_include_directories(ThirdpartyLibs
     PUBLIC
-    ${SPCTRNTS_THIRDPARTY_DIR}
+    ${PETALS_THIRDPARTY_DIR}
 )
 
 source_group(stb FILES ${THIRDPARTY_STB_SRCS})

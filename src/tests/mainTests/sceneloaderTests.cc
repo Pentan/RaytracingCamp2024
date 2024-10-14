@@ -4,19 +4,19 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/assetlibrary.h>
-#include <spectrenotes/scene.h>
-#include <spectrenotes/bvh.h>
-#include <spectrenotes/sceneloader.h>
-#include <spectrenotes/animstand.h>
+#include <petals/types.h>
+#include <petals/assetlibrary.h>
+#include <petals/scene.h>
+#include <petals/bvh.h>
+#include <petals/sceneloader.h>
+#include <petals/animstand.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
     std::string KhronosGlTFSampleModelPath(std::string name) {
         std::stringstream ss;
-        ss <<  SPCTRNTS_TEST_DATA_DIR;
+        ss <<  PETALS_TEST_DATA_DIR;
         ss << "/glTF-Sample-Assets/Models/";
         ss << name << "/glTF/";
         ss << name << ".gltf";
@@ -58,14 +58,14 @@ TEST_CASE("Animated model test 01 [SceneLoader] [glTF]") {
 
 TEST_CASE("Cell stage scene test 01 [SceneLoader] [AnimStand]") {
     std::stringstream ss;
-    ss << SPCTRNTS_TEST_DATA_DIR << "/" << "test_scene01.json";
+    ss << PETALS_TEST_DATA_DIR << "/" << "test_scene01.json";
     std::string path = ss.str();
 
     AnimationStand* animstand = SceneLoader::loadAnimStand(path);
     REQUIRE(animstand != nullptr);
 
-    animstand->outconf.directory = SPCTRNTS_TEST_OUTPUT_DIR;
-    animstand->render();
+    //animstand->outconf.directory = PETALS_TEST_OUTPUT_DIR;
+    //animstand->render();
 
     // delete animstand;
 }

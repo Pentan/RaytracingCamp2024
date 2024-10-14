@@ -2,15 +2,15 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/ray.h>
-#include <spectrenotes/aabb.h>
-#include <spectrenotes/mesh.h>
-#include <spectrenotes/bvh.h>
-#include <spectrenotes/camera.h>
-#include <spectrenotes/random.h>
+#include <petals/types.h>
+#include <petals/ray.h>
+#include <petals/aabb.h>
+#include <petals/mesh.h>
+#include <petals/bvh.h>
+#include <petals/camera.h>
+#include <petals/random.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
 

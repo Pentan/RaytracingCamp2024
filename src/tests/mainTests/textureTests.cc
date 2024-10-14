@@ -5,13 +5,13 @@
 #include <doctest.h>
 #include "../testsupport.h"
 
-#include <spectrenotes/types.h>
-#include <spectrenotes/texture.h>
+#include <petals/types.h>
+#include <petals/texture.h>
 
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 
-using namespace Spectrenotes;
+using namespace Petals;
 
 namespace {
     void SaveImage(std::string filename, const ImageTexture* tex, const double gamma=2.2) {
@@ -39,7 +39,7 @@ namespace {
         }
 
         std::stringstream ss;
-        ss << SPCTRNTS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".png";
+        ss << PETALS_TEST_OUTPUT_DIR << "/" << outdir << "/" << filename << ".png";
         std::string outpath = ss.str();
 
         int res = stbi_write_png(outpath.c_str(), w, h, 4, buf.data(), 0);
@@ -118,8 +118,8 @@ TEST_CASE("ImageTexture test [Texture]") {
 
 TEST_CASE("ImageTexture load test [Texture]") {
     std::stringstream ss;
-    //ss << SPCTRNTS_TEST_DATA_DIR << "/" << "normaltest0.png";
-    ss << SPCTRNTS_TEST_DATA_DIR << "/" << "images/image01.tga";
+    //ss << PETALS_TEST_DATA_DIR << "/" << "normaltest0.png";
+    ss << PETALS_TEST_DATA_DIR << "/" << "images/image01.tga";
     std::string path = ss.str();
     
     int x, y, c;
